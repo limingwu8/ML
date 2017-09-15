@@ -14,7 +14,7 @@ y = np.array(df['class'])   # class
 # shuffle the data set to train and test
 x_train, x_test, y_train, y_test = model_selection.train_test_split(x,y,test_size=0.2)
 # get a KNN classifier
-clf = neighbors.KNeighborsClassifier(n_neighbors = 28)
+clf = neighbors.KNeighborsClassifier(n_neighbors = 29)
 # train this classifier
 clf.fit(x_train,y_train)
 
