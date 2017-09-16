@@ -1,5 +1,6 @@
 import os
 
+
 path = "F:\\datasets\\dogs"
 i = 0
 for file in os.listdir(path):
