@@ -86,7 +86,15 @@ model.add(Conv2D(
     filters = 32,
     kernel_size = 5,
     strides = 1,
-    padding = 'valid',
+    padding = 'same',
+    input_shape = (1,imgRows,imgCols)
+))
+model.add(Activation('relu'))
+model.add(Conv2D(
+    filters = 32,
+    kernel_size = 5,
+    strides = 1,
+    padding = 'same',
     input_shape = (1,imgRows,imgCols)
 ))
 model.add(Activation('relu'))
@@ -94,24 +102,9 @@ model.add(Activation('relu'))
 model.add(MaxPool2D(
     pool_size=(2, 2),
     strides=(2, 2),
-    padding='valid'
+    padding='same'
 ))
 model.add(Dropout(0.5))
-# Conv layer 2 output size : 64x100x100
-model.add(Conv2D(
-    filters = 64,
-    kernel_size = 5,
-    strides = 1,
-    padding = 'valid',
-))
-model.add(Activation('relu'))
-# MaxPooling layer 2 output shape : 64x50x50
-model.add(MaxPool2D(
-    pool_size=(2, 2),
-    strides=(2, 2),
-    padding='valid'
-))
-model.add(Dropout(0.25))
 
 # Dense Layer
 model.add(Flatten())
@@ -120,16 +113,15 @@ model.add(Activation('relu'))
 model.add(Dropout(0.5))
 model.add(Dense(units=2))
 model.add(Activation('softmax'))
-# optimizer
-adam = adam(lr=1e-2)
+
 # compile
-model.compile(optimizer="adadelta",
+model.compile(optimizer="adam",
               loss='categorical_crossentropy',
               metrics=['accuracy'])
-
 # train network
 print('Training...')
-model.fit(X_train,y_train,batch_size=10,epochs=2)
+
+model.fit(X_train,y_train,batch_size=10,epochs=20,verbose=1,validation_split=0.2)
 loss,accuracy = model.evaluate(X_test,y_test)
 print("\nloss:",loss)
 print("accuracy:",accuracy)
