@@ -29,6 +29,7 @@ files = os.listdir("F://datasets//inputDataResized")
 
 # example of reading a picture
 # im1 = np.array(Image.open(dir2 + '\\' + files[0]))
+# plt.imshow(im1)
 # m, n = im1.shape[0:2]
 # imnbr = len(files)
 
