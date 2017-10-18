@@ -134,10 +134,10 @@ if __name__ == '__main__':
     cwd = os.getcwd()
     print('current work directory',cwd)
     folder = cwd + '\\data'
-    # image_list, label_list = get_file(folder)
-    # print(image_list)
-    # print(label_list)
-    # convert_to_tfrecord(image_list,label_list,folder,'dataset')
+    image_list, label_list = get_file(folder)
+    print(image_list)
+    print(label_list)
+    convert_to_tfrecord(image_list,label_list,folder,'dataset')
     image_batch, label_batch = read_and_decode(folder + '\\dataset.tfrecords', BATCH_SIZE)
 
     with tf.Session() as sess:
