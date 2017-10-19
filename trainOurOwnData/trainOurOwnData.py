@@ -12,6 +12,7 @@ from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
 from PIL import Image
 
+
 dir1 = "F://datasets//inputData"
 dir2 = "F://datasets//inputDataResized"
 # image size
