@@ -5,6 +5,9 @@ import os
 import re
 import matplotlib.pyplot as plt
 import skimage.io as io
+import scipy.misc
+from PIL import Image
+
 
 def get_file(file_dir):
     '''Get full image directory and corresponding labels
@@ -42,6 +45,11 @@ def get_file(file_dir):
     label_list = list(temp[:,1])
     label_list = [int(float(i)) for i in label_list]
 
+    # as a test, only use 500 images and 500 labels
+    # when train, delete the following
+    image_list = image_list[:500]
+    label_list = label_list[:500]
+
     return image_list, label_list
 
 def int64_feature(value):
@@ -50,6 +58,7 @@ def int64_feature(value):
     return tf.train.Feature(int64_list=tf.train.Int64List(value=value))
 def bytes_feature(value):
     return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
+
 
 def convert_to_tfrecord(images,labels,save_dir,name):
     ''' convert all images and labels to one tfrecord file
@@ -70,8 +79,13 @@ def convert_to_tfrecord(images,labels,save_dir,name):
     print('\nTransform start...')
     for i in np.arange(0,n_samples):
         try:
-            image = io.imread(images[i])    # type image much be ndarray
-            image_raw = image.tostring()
+            # type image must be ndarray
+            img = Image.open(images[i])
+            img = img.resize((28,28))
+            img = img.convert("L")
+            img = np.array(img.getdata(), dtype='uint8').reshape(img.size[0],img.size[1])
+
+            image_raw = img.tostring()
             label = int(labels[i])
             example = tf.train.Example(
                 features = tf.train.Features(
@@ -96,7 +110,7 @@ def read_and_decode(tfrecords_file, batch_size):
         label: 1D tensor - [batch_size]
     '''
     # make an input Queue from the tfrecord file
-    filename_queue = tf.train.string_input_producer([tfrecords_file])
+    filename_queue = tf.train.string_input_producer([tfrecords_file], num_epochs=None)
 
     reader = tf.TFRecordReader()
     _,serialized_example = reader.read(filename_queue)
@@ -108,12 +122,15 @@ def read_and_decode(tfrecords_file, batch_size):
         }
     )
     image = tf.decode_raw(img_features['image_raw'], tf.uint8)
+
     #######################################################
     # you can put data augmentation here, I didn't use it #
     ###################################################################
 
-    # all the images are 200*200, you can change the image size here.
-    image = tf.reshape(image, [28, 28])
+    # this image size should be the same as the format in .tfrecords file
+    image = tf.reshape(image, [28, 28, 1])
+    image = tf.cast(image, tf.float32)
+    image = tf.image.per_image_standardization(image)
     label = tf.cast(img_features['label'], tf.int32)
     image_batch, label_batch = tf.train.batch(
         [image, label],
@@ -126,28 +143,27 @@ def read_and_decode(tfrecords_file, batch_size):
 def plot_images(images, labels, title):
     '''plot one batch size'''
     for i in np.arange(0, BATCH_SIZE):
-        plt.subplot(1,5,i+1)
+        plt.subplot(1,BATCH_SIZE,i+1)
         plt.axis('off')
-        plt.title(chr(ord('0') + labels[i]-1), fontsize=14)
+        plt.title(chr(ord('0') + labels[i]), fontsize=14)
         plt.subplots_adjust(top=1.5)
         plt.imshow(images[i])
     plt.show()
 
 if __name__ == '__main__':
-    BATCH_SIZE = 1
-    cwd = os.getcwd()
-    print('current work directory',cwd)
-    # image_list, label_list = get_file(folder)
-    # print(image_list)
-    # print(label_list)
-    # convert_to_tfrecord(image_list,label_list,folder,'dataset')
-    image_batch, label_batch = read_and_decode(cwd + '\\PKLot_segmented.tfrecords', BATCH_SIZE)
+    BATCH_SIZE = 10
+    data_folder = 'F:\\datasets\\PKLot\\PKLotSegmented'
+    tfrecord_path = 'F:\\datasets\\PKLot\\tfrecords'
+    tfrecord_name = 'PKLot_segmented2'
+
+    # image_list, label_list = get_file(data_folder)
+    # convert_to_tfrecord(image_list,label_list,tfrecord_path,tfrecord_name)
+    image_batch, label_batch = read_and_decode(os.path.join(tfrecord_path, tfrecord_name + '.tfrecords'), BATCH_SIZE)
 
     with tf.Session() as sess:
         i = 0
         coord = tf.train.Coordinator()
         threads = tf.train.start_queue_runners(coord=coord)
-
         try:
             while not coord.should_stop() and i<1:
                 image, label = sess.run([image_batch, label_batch])
