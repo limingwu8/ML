@@ -11,8 +11,8 @@ Created on Tue Oct 17 08:50:40 2017
 import os
 import numpy as np
 import tensorflow as tf
-import input_data
-import model
+from dogs_vs_cats import input_data
+from dogs_vs_cats import model
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 #%%
