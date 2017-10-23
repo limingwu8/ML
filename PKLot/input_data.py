@@ -3,18 +3,20 @@ import tensorflow as tf
 import numpy as np
 import os
 import re
+import math
 import matplotlib.pyplot as plt
 import skimage.io as io
 import scipy.misc
 from PIL import Image
 
 
-def get_file(file_dir):
-    '''Get full image directory and corresponding labels
-    :param file_dir: file directory
-    :return:
-        images: image directories, list, string
-        labels: label, list, int
+def get_files(file_dir, val_ratio):
+    '''
+    Args:
+        file_dir: file directory
+        val_radio: the ratio of validation data, e.g. 0.2
+    Returns:
+        list of training images , training labels, validation images and validation labels
     '''
     images = []
     temp = []
@@ -22,35 +24,46 @@ def get_file(file_dir):
         # image directories
         for file in files:
             images.append(os.path.join(root,file))
-        label = re.split(r'\\',root)[-1]
+        label = re.split(r'/',root)[-1]
         if (label == 'Empty') or (label == 'Occupied'):
             temp.append(root)
     # assign labels based on the folder name
     labels = []
     for folder in temp:
         n_img = len(os.listdir(folder))
-        lastword = folder.split('\\')[-1]
+        lastword = folder.split('/')[-1]
 
         if lastword=='Empty':
-            labels = np.append(labels, n_img*[0])
+            labels = np.append(labels, int(n_img)*[0])
         else:
-            labels = np.append(labels,n_img*[1])
+            labels = np.append(labels,int(n_img)*[1])
 
     # put the images and labels and shuffle them
     temp = np.array([images,labels])
     temp = temp.transpose()
     np.random.shuffle(temp)
 
-    image_list = list(temp[:,0])
-    label_list = list(temp[:,1])
-    label_list = [int(float(i)) for i in label_list]
+    all_image_list = list(temp[:, 0])
+    all_label_list = list(temp[:, 1])
 
-    # as a test, only use 500 images and 500 labels
-    # when train, delete the following
-    image_list = image_list[:500]
-    label_list = label_list[:500]
+    # just use 500 images to test, when training, delete the following two lines
+    all_image_list = all_image_list[:500]
+    all_label_list = all_label_list[:500]
 
-    return image_list, label_list
+    # split data to training data and validation data
+    n_sample = len(all_label_list)  # number of all samples
+    n_val = math.ceil(n_sample * val_ratio)  # number of validation samples
+    n_train = n_sample - n_val  # number of training samples
+
+    tra_images = all_image_list[0:n_train]
+    tra_labels = all_label_list[0:n_train]
+    tra_labels = [int(float(i)) for i in tra_labels]
+    val_images = all_image_list[n_train:]
+    val_labels = all_label_list[n_train:]
+    val_labels = [int(float(i)) for i in val_labels]
+
+    return tra_images, tra_labels, val_images, val_labels
+
 
 def int64_feature(value):
     if not isinstance(value, list):
@@ -143,22 +156,38 @@ def read_and_decode(tfrecords_file, batch_size):
 def plot_images(images, labels, title):
     '''plot one batch size'''
     for i in np.arange(0, BATCH_SIZE):
+        image = images[i].reshape(28,28)
         plt.subplot(1,BATCH_SIZE,i+1)
         plt.axis('off')
         plt.title(chr(ord('0') + labels[i]), fontsize=14)
         plt.subplots_adjust(top=1.5)
-        plt.imshow(images[i])
+        plt.imshow(image)
     plt.show()
 
 if __name__ == '__main__':
-    BATCH_SIZE = 10
-    data_folder = 'F:\\datasets\\PKLot\\PKLotSegmented'
-    tfrecord_path = 'F:\\datasets\\PKLot\\tfrecords'
-    tfrecord_name = 'PKLot_segmented2'
 
-    # image_list, label_list = get_file(data_folder)
-    # convert_to_tfrecord(image_list,label_list,tfrecord_path,tfrecord_name)
-    image_batch, label_batch = read_and_decode(os.path.join(tfrecord_path, tfrecord_name + '.tfrecords'), BATCH_SIZE)
+
+    dataset_path = '/home/liming/Documents/datasets/PKLot/PKLotSegmented'
+    dataset_path = '/home/liming/Documents/datasets/PKLot/PKLotSegmented'
+    tfrecords_path = '/home/liming/Documents/datasets/PKLot/tfrecords'
+
+    train_tfrecords_name = 'train'
+    val_tfrecords_name = 'val'
+
+    BATCH_SIZE = 10
+    val_ratio = 0.2
+
+
+    # # write data to tfrecords
+    # train_image_list, train_label_list, val_image_list, val_label_list = get_files(dataset_path,val_ratio)
+    # # write training data to a tfrecords, write validation data to another tfrecords
+    # convert_to_tfrecord(train_image_list,train_label_list,tfrecords_path,train_tfrecords_name)
+    # convert_to_tfrecord(val_image_list, val_label_list, tfrecords_path, val_tfrecords_name)
+
+
+    # read data from tfrecords and display them
+    # image_batch, label_batch = read_and_decode(os.path.join(tfrecords_path, train_tfrecords_name + '.tfrecords'), BATCH_SIZE)
+    image_batch, label_batch = read_and_decode(os.path.join(tfrecords_path, val_tfrecords_name + '.tfrecords'), BATCH_SIZE)
 
     with tf.Session() as sess:
         i = 0

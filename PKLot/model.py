@@ -29,11 +29,11 @@ def inference(images, batch_size, n_classes):
     # shape = [kernel size, kernel size, channels, kernel numbers]
     with tf.variable_scope('conv1') as scope:
         weights = tf.get_variable('weights',
-                                  shape = [3,3,1,64],
+                                  shape = [3,3,1,32],
                                   dtype = tf.float32,
                                   initializer = tf.truncated_normal_initializer(stddev = 0.1, dtype = tf.float32))
         biases = tf.get_variable('biases',
-                                 shape = [64],
+                                 shape = [32],
                                  dtype = tf.float32,
                                  initializer = tf.constant_initializer(0.1))
         conv = tf.nn.conv2d(images, weights, strides = [1,1,1,1], padding = 'SAME')
@@ -51,12 +51,12 @@ def inference(images, batch_size, n_classes):
     # conv2
     with tf.variable_scope('conv2') as scope:
         weights = tf.get_variable('weights',
-                                  shape = [3,3,64,64],
+                                  shape = [3,3,32,32],
                                   dtype = tf.float32,
                                   initializer = tf.truncated_normal_initializer(stddev = 0.1, dtype = tf.float32))
         
         biases = tf.get_variable('biases',
-                                 shape = [64],
+                                 shape = [32],
                                  dtype = tf.float32,
                                  initializer = tf.truncated_normal_initializer(0.1))
         conv = tf.nn.conv2d(norm1, weights, strides = [1,1,1,1], padding = 'SAME')
@@ -67,7 +67,7 @@ def inference(images, batch_size, n_classes):
     with tf.variable_scope('pooling_norm2') as scope:
         norm2 = tf.nn.lrn(conv2, depth_radius = 4, bias = 1.0, alpha = 0.001/9.0,
                           beta = 0.75, name = 'norm2')
-        pool2 = tf.nn.max_pool(norm2, ksize = [1,3,3,1], strides = [1,1,1,1],
+        pool2 = tf.nn.max_pool(norm2, ksize = [1,2,2,1], strides = [1,1,1,1],
                                padding = 'SAME', name = 'pooling2')
     
     # local3
