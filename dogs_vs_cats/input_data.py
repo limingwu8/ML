@@ -11,6 +11,7 @@ import tensorflow as tf
 import numpy as np
 import os
 
+
 #%%
 
 def get_files(file_dir):
@@ -139,15 +140,14 @@ if __name__ == '__main__':
         coord.join(threads)
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
