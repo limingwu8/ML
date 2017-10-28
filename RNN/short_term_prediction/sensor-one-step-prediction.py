@@ -17,7 +17,7 @@ def parser(x):
 	return datetime.strptime('190'+x, '%Y-%m')
 
 # frame a sequence as a supervised learning problem
-def timeseries_to_supervised(data, lag=2):
+def timeseries_to_supervised(data, lag=1):
 	df = DataFrame(data)
 	columns = [df.shift(i) for i in range(1, lag+1)]
 	columns.append(df)
@@ -77,8 +77,10 @@ def forecast_lstm(model, batch_size, X):
 	yhat = model.predict(X, batch_size=batch_size)
 	return yhat[0,0]
 
+TRAIN_LEN = 400
+
 # load dataset
-series = read_csv('sensor_data.csv', header=0)
+series = read_csv('sensor_data2.csv', header=0)
 
 # transform data to be stationary
 raw_values = series.values
@@ -92,13 +94,13 @@ supervised = timeseries_to_supervised(diff_values, 1)
 supervised_values = supervised.values
 
 # split data into train and test-sets
-train, test = supervised_values[:400], supervised_values[400:]
+train, test = supervised_values[:TRAIN_LEN], supervised_values[TRAIN_LEN:]
 
 # transform the scale of the data
 scaler, train_scaled, test_scaled = scale(train, test)
 
 # fit the model
-lstm_model = fit_lstm(train_scaled, 1, 1, 4)
+lstm_model = fit_lstm(train_scaled, 1, 10, 4)
 # forecast the entire training dataset to build up state for forecasting
 train_reshaped = train_scaled[:, 0].reshape(len(train_scaled), 1, 1)
 lstm_model.predict(train_reshaped, batch_size=1)
@@ -115,13 +117,14 @@ for i in range(len(test_scaled)):
 	yhat = inverse_difference(raw_values, yhat, len(test_scaled)+1-i)
 	# store forecast
 	predictions.append(yhat)
-	expected = raw_values[len(train) + i ]
+	expected = raw_values[len(train) + i]
 	print('timePoint=%d, Predicted=%f, Expected=%f' % (i+1, yhat, expected))
 
 # report performance
-rmse = sqrt(mean_squared_error(raw_values[400:], predictions))
+rmse = sqrt(mean_squared_error(raw_values[TRAIN_LEN+1:], predictions))
 print('Test RMSE: %.3f' % rmse)
 # line plot of observed vs predicted
-pyplot.plot(raw_values[400:])
-pyplot.plot(predictions)
+pyplot.plot(range(0,len(raw_values)),raw_values)
+# pyplot.plot(raw_values[TRAIN_LEN+1:])
+pyplot.plot(range(TRAIN_LEN+1,len(raw_values)),predictions)
 pyplot.show()
