@@ -47,8 +47,8 @@ def get_files(file_dir, val_ratio):
     all_label_list = list(temp[:, 1])
 
     # just use 500 images to test, when training, delete the following two lines
-    all_image_list = all_image_list[:500]
-    all_label_list = all_label_list[:500]
+    all_image_list = all_image_list[:3000]
+    all_label_list = all_label_list[:3000]
 
     # split data to training data and validation data
     n_sample = len(all_label_list)  # number of all samples
@@ -178,15 +178,14 @@ if __name__ == '__main__':
     val_ratio = 0.2
 
 
-    # # write data to tfrecords
-    # train_image_list, train_label_list, val_image_list, val_label_list = get_files(dataset_path,val_ratio)
-    # # write training data to a tfrecords, write validation data to another tfrecords
-    # convert_to_tfrecord(train_image_list,train_label_list,tfrecords_path,train_tfrecords_name)
-    # convert_to_tfrecord(val_image_list, val_label_list, tfrecords_path, val_tfrecords_name)
+    train_image_list, train_label_list, val_image_list, val_label_list = get_files(dataset_path,val_ratio)
+    # write training data to a tfrecords, write validation data to another tfrecords
+    convert_to_tfrecord(train_image_list,train_label_list,tfrecords_path,train_tfrecords_name)
+    convert_to_tfrecord(val_image_list, val_label_list, tfrecords_path, val_tfrecords_name)
 
 
     # read data from tfrecords and display them
-    # image_batch, label_batch = read_and_decode(os.path.join(tfrecords_path, train_tfrecords_name + '.tfrecords'), BATCH_SIZE)
+    image_batch, label_batch = read_and_decode(os.path.join(tfrecords_path, train_tfrecords_name + '.tfrecords'), BATCH_SIZE)
     image_batch, label_batch = read_and_decode(os.path.join(tfrecords_path, val_tfrecords_name + '.tfrecords'), BATCH_SIZE)
 
     with tf.Session() as sess:
