@@ -159,7 +159,7 @@ def evaluation(logits, labels):
         # e.g. the probability of 1 is 0.7, the probability of 0 is 0.3
         # choose 1, compare with label
         correct = tf.nn.in_top_k(logits, labels, 1)
-        correct = tf.cast(correct, tf.float16)
+        correct = tf.cast(correct, tf.float32)
         accuracy = tf.reduce_mean(correct)
         tf.summary.scalar(scope.name + '/accuracy', accuracy)
         
