@@ -190,5 +190,5 @@ def evaluate_one_image():
     print()
 
 if __name__ == '__main__':
-    run_training()
-    # evaluate_one_image()
+    # run_training()
+    evaluate_one_image()
