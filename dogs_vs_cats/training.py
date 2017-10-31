@@ -52,18 +52,20 @@ def run_training():
 
     logits = model.inference(x, BATCH_SIZE, N_CLASSES)
     loss = model.losses(logits, y_)
-    acc = model.evaluation(logits, y_)
     train_op = model.training(loss, learning_rate)
+    acc = model.evaluation(logits, y_)
+
     saver = tf.train.Saver()
     with tf.Session() as sess:
 
         sess.run(tf.global_variables_initializer())
-        coord = tf.train.Coordinator()
-        threads = tf.train.start_queue_runners(sess=sess, coord=coord)
 
         summary_op = tf.summary.merge_all()
         train_writer = tf.summary.FileWriter(logs_train_dir, sess.graph)
         # val_writer = tf.summary.FileWriter(logs_val_dir, sess.graph)
+
+        coord = tf.train.Coordinator()
+        threads = tf.train.start_queue_runners(sess=sess, coord=coord)
 
         try:
             for step in np.arange(MAX_STEP):
