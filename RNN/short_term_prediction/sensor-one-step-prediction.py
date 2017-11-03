@@ -85,7 +85,6 @@ raw_values = series['Value']
 raw_time = raw_time.values
 raw_values = raw_values.values
 
-train_len = int(len(raw_values)*0.8)
 test_len = int(len(raw_values)*0.2)
 
 # transform data to be stationary
@@ -102,14 +101,13 @@ train, test = supervised_values[0:-test_len], supervised_values[-test_len:]
 scaler, train_scaled, test_scaled = scale(train, test)
 
 # fit the model
-lstm_model = fit_lstm(train_scaled, 1, 10, 4)
+lstm_model = fit_lstm(train_scaled, 1, 500, 4)
 # forecast the entire training dataset to build up state for forecasting
 train_reshaped = train_scaled[:, 0].reshape(len(train_scaled), 1, 1)
 lstm_model.predict(train_reshaped, batch_size=1)
 
 # walk-forward validation on the test data
 predictions = list()
-error = 0
 for i in range(len(test_scaled)):
     # make one-step forecast
     X, y = test_scaled[i, 0:-1], test_scaled[i, -1]
@@ -122,15 +120,15 @@ for i in range(len(test_scaled)):
     predictions.append(yhat)
     expected = raw_values[len(train) + i + 1]
     print('timePoint=%d, Predicted=%f, Expected=%f' % (i+1, yhat, expected))
-    error = error + pow(expected,yhat,2)
 
 # report performance
 rmse = sqrt(mean_squared_error(raw_values[-test_len:], predictions))
 print('Test RMSE: %.3f' % rmse)
+pyplot.figure()
 pyplot.plot(raw_values[-test_len:])
 pyplot.plot(predictions)
-# # line plot of observed vs predicted
-# pyplot.plot(range(0,len(raw_values)),raw_values)
-# # pyplot.plot(raw_values[TRAIN_LEN+1:])
-# pyplot.plot(range(train_len+1,len(raw_values)),predictions)
+# line plot of observed vs predicted
+pyplot.figure()
+pyplot.plot(range(0,len(raw_values)),raw_values)
+pyplot.plot(range(len(train)+1,len(raw_values)),predictions)
 pyplot.show()
