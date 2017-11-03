@@ -79,7 +79,7 @@ def forecast_lstm(model, batch_size, X):
 
 
 # load dataset
-series = read_csv('./dataset/OIL_RETURN_TEMP_unsample.csv',sep=',')
+series = read_csv('./dataset/OIL_RETURN_TEMP_sample_1hour.csv',sep=',')
 raw_time = series['Time']
 raw_values = series['Value']
 raw_time = raw_time.values
