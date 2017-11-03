@@ -77,8 +77,9 @@ def forecast_lstm(model, batch_size, X):
 	yhat = model.predict(X, batch_size=batch_size)
 	return yhat[0,0]
 
+test_len = 12
 # load dataset
-series = read_csv('shampoo-sales.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
+series = read_csv('./dataset/shampoo-sales.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
 
 # transform data to be stationary
 raw_values = series.values
@@ -89,13 +90,13 @@ supervised = timeseries_to_supervised(diff_values, 1)
 supervised_values = supervised.values
 
 # split data into train and test-sets
-train, test = supervised_values[0:-12], supervised_values[-12:]
+train, test = supervised_values[0:-test_len], supervised_values[-test_len:]
 
 # transform the scale of the data
 scaler, train_scaled, test_scaled = scale(train, test)
 
 # fit the model
-lstm_model = fit_lstm(train_scaled, 1, 3000, 4)
+lstm_model = fit_lstm(train_scaled, 1, 1, 4)
 # forecast the entire training dataset to build up state for forecasting
 train_reshaped = train_scaled[:, 0].reshape(len(train_scaled), 1, 1)
 lstm_model.predict(train_reshaped, batch_size=1)
@@ -116,9 +117,9 @@ for i in range(len(test_scaled)):
 	print('Month=%d, Predicted=%f, Expected=%f' % (i+1, yhat, expected))
 
 # report performance
-rmse = sqrt(mean_squared_error(raw_values[-12:], predictions))
+rmse = sqrt(mean_squared_error(raw_values[-test_len:], predictions))
 print('Test RMSE: %.3f' % rmse)
 # line plot of observed vs predicted
-pyplot.plot(raw_values[-12:])
+pyplot.plot(raw_values[-test_len:])
 pyplot.plot(predictions)
 pyplot.show()
