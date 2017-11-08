@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 import xml.etree.cElementTree as ET
 import tensorflow as tf
 
-img_path = '/home/liming/Documents/datasets/PKLot/PKLot/PUCPR/Cloudy/2012-09-12/2012-09-12_07_34_01.jpg'
-xml_path = '/home/liming/Documents/datasets/PKLot/PKLot/PUCPR/Cloudy/2012-09-12/2012-09-12_07_34_01.xml'
+img_path = '/home/bc/Documents/datasets/PKLot/PKLot/PUCPR/Cloudy/2012-09-12/2012-09-12_07_34_01.jpg'
+xml_path = '/home/bc/Documents/datasets/PKLot/PKLot/PUCPR/Cloudy/2012-09-12/2012-09-12_07_34_01.xml'
 
 
 def fill_color(img_path,xml_path):
@@ -72,7 +72,7 @@ def segment(img_path,xml_path):
     segments_labels = tf.convert_to_tensor(segments_labels, tf.int32)
 
     # preprocess
-    # segments_images = tf.image.per_image_standardization(segments_images)
+    segments_images = tf.image.per_image_standardization(segments_images)
 
     return segments_images, segments_labels
 
@@ -110,8 +110,18 @@ def segment_nparray(img_path,xml_path):
     segments_images = np.array(segments)
     segments_labels = np.array(labels)
 
+    segments_images = per_image_standardization(segments_images)
+
     return segments_images, segments_labels
 
+def per_image_standardization(images):
+    images = images.reshape(-1,28*28)
+    for i in range(0,len(images)):
+        image = images[i]
+        adjusted_stddev = max(np.std(image),1.0/np.sqrt(len(image)))
+        image = (image - np.mean(image))/adjusted_stddev
+        images[i] = image
+    return images.reshape(-1,28,28)
 
 if __name__ == '__main__':
     pass
@@ -120,6 +130,8 @@ if __name__ == '__main__':
 
     # plt.imshow(img)
     # plt.show()
+    img, segments = segment_nparray(img_path, xml_path)
+
 
 
 

@@ -79,9 +79,12 @@ def forecast_lstm(model, batch_size, X):
 
 
 # load dataset
-series = read_csv('./dataset/OIL_RETURN_TEMP_sample_1hour.csv',sep=',')
-raw_time = series['Time']
-raw_values = series['Value']
+series = read_csv('./dataset/sample_1_day/PT-203.csv',sep=',')
+header = list(series.columns.values)
+
+raw_time = series[header[0]]
+raw_values = series[header[1]]
+
 raw_time = raw_time.values
 raw_values = raw_values.values
 
@@ -101,7 +104,7 @@ train, test = supervised_values[0:-test_len], supervised_values[-test_len:]
 scaler, train_scaled, test_scaled = scale(train, test)
 
 # fit the model
-lstm_model = fit_lstm(train_scaled, 1, 500, 4)
+lstm_model = fit_lstm(train_scaled, 1, 10, 4)
 # forecast the entire training dataset to build up state for forecasting
 train_reshaped = train_scaled[:, 0].reshape(len(train_scaled), 1, 1)
 lstm_model.predict(train_reshaped, batch_size=1)

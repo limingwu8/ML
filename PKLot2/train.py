@@ -9,20 +9,20 @@ def run_training():
 
     N_CLASSES = 2
     BATCH_SIZE = 64
-    MAX_STEP = 10000
+    MAX_STEP = 20000
     learning_rate = 0.0001
     IMG_W = 28
     IMG_H = 28
     CHANNEL = 1
-    is_train = 1
+    is_train = 2
 
-    tfrecords_path = '/home/liming/Documents/datasets/PKLot/tfrecords'
+    tfrecords_path = '/home/bc/Documents/datasets/PKLot/tfrecords'
     train_tfrecords_name = 'train'
     val_tfrecords_name = 'val'
     logs_train_dir = './logs/train/'
     logs_val_dir = './logs/val/'
-    img_path = '/home/liming/Documents/datasets/PKLot/PKLot/PUCPR/Cloudy/2012-09-12/2012-09-12_07_34_01.jpg'
-    xml_path = '/home/liming/Documents/datasets/PKLot/PKLot/PUCPR/Cloudy/2012-09-12/2012-09-12_07_34_01.xml'
+    img_path = '/home/bc/Documents/datasets/PKLot/PKLot/PUCPR/Cloudy/2012-09-12/2012-09-12_07_34_01.jpg'
+    xml_path = '/home/bc/Documents/datasets/PKLot/PKLot/PUCPR/Cloudy/2012-09-12/2012-09-12_07_34_01.xml'
 
 
     # read data from tfrecords file
@@ -115,12 +115,12 @@ def run_training():
                 else:
                     print('No checkpoint file found')
 
-                train_images, train_labels = sess.run([train_batch, train_label_batch])
-                prediction = sess.run(train_logits, feed_dict={x: train_images})
+                val_images, val_labels = sess.run([val_batch, val_label_batch])
+                prediction = sess.run(train_logits, feed_dict={x: val_images})
                 max_index = np.argmax(prediction, 1)
                 print('prediction:', max_index)
-                print('label:', train_labels)
-                print()
+                print('label:', val_labels)
+                print(sum(max_index == val_labels[:BATCH_SIZE]) / BATCH_SIZE)
 
         except tf.errors.OutOfRangeError:
             print('Done training -- epoch limit reached')
@@ -129,28 +129,61 @@ def run_training():
 
         coord.join(threads)
 
+# def evaluate_one_image():
+#     BATCH_SIZE = 64
+#     segment_images, segment_labels = segment_nparray(img_path, xml_path)
+#     # rand = random.randint(0,9)
+#     segment_images = segment_images[0:BATCH_SIZE]
+#     segment_labels = segment_labels[0:BATCH_SIZE]   # 1
+#
+#     segment_images = segment_images.reshape(BATCH_SIZE, 28, 28, 1)
+#
+#     with tf.Graph().as_default():
+#
+#         N_CLASSES = 2
+#
+#         segment_images = tf.cast(segment_images, tf.float32)
+#         logit = inference(segment_images, BATCH_SIZE, N_CLASSES)
+#
+#         logs_train_dir = './logs/train/'
+#         saver = tf.train.Saver()
+#
+#         with tf.Session() as sess:
+#             print("Reading checkpoints...")
+#             ckpt = tf.train.get_checkpoint_state(logs_train_dir)
+#             if ckpt and ckpt.model_checkpoint_path:
+#                 global_step = ckpt.model_checkpoint_path.split('/')[-1].split('-')[-1]
+#                 saver.restore(sess, ckpt.model_checkpoint_path)
+#                 print('Loading success, global_step is %s' % global_step)
+#             else:
+#                 print('No checkpoint file found')
+#
+#             prediction = sess.run(logit)
+#             max_index = np.argmax(prediction,1)
+#             print('prediction: ',max_index)
+#             print('segment_labels: ',segment_labels)
+#             print('Accuracy: ',sum(max_index == segment_labels[:BATCH_SIZE]) / BATCH_SIZE)
+#
+#     print()
 def evaluate_one_image():
-    BATCH_SIZE = 50
-    segment_images, segment_labels = segment_nparray(img_path, xml_path)
+    BATCH_SIZE = 64
+    segment_images, segment_labels = segment(img_path, xml_path)
     # rand = random.randint(0,9)
-    image_array = segment_images[0:50]
-    labels = segment_labels[0:50]   # 1
+    segment_images = segment_images[0:BATCH_SIZE]
+    segment_labels = segment_labels[0:BATCH_SIZE]   # 1
 
-    image_array = image_array.reshape(BATCH_SIZE, 28, 28, 1)
+    segment_images = tf.reshape(segment_images,[BATCH_SIZE, 28, 28, 1])
 
     with tf.Graph().as_default():
 
-        N_CLASSES = 2
-
-        image = tf.cast(image_array, tf.float32)
-        # image = tf.reshape(image, [10, 28, 28, 1])
-        logit = inference(image, BATCH_SIZE, N_CLASSES)
-        # logit = tf.nn.softmax(logit)
-        x = tf.placeholder(tf.float32, shape=[BATCH_SIZE, 28, 28, 1])
-        logs_train_dir = './logs/train/'
-        saver = tf.train.Saver()
-
         with tf.Session() as sess:
+            N_CLASSES = 2
+
+            segment_images = tf.cast(segment_images, tf.float32)
+            logit = inference(segment_images, BATCH_SIZE, N_CLASSES)
+
+            logs_train_dir = './logs/train/'
+            saver = tf.train.Saver()
             print("Reading checkpoints...")
             ckpt = tf.train.get_checkpoint_state(logs_train_dir)
             if ckpt and ckpt.model_checkpoint_path:
@@ -160,13 +193,13 @@ def evaluate_one_image():
             else:
                 print('No checkpoint file found')
 
-            prediction = sess.run(logit, feed_dict={x: image_array})
+            prediction = sess.run(logit)
             max_index = np.argmax(prediction,1)
-            print(max_index)
-            print('label:',labels)
+            print('prediction: ',max_index)
+            print('segment_labels: ',segment_labels)
+            print('Accuracy: ',sum(max_index == segment_labels[:BATCH_SIZE]) / BATCH_SIZE)
 
     print()
-
 if __name__ == '__main__':
     # run_training()
     evaluate_one_image()

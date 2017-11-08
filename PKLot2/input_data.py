@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import skimage.io as io
 import scipy.misc
 from PIL import Image
+from PKLot2.mark_image import *
 
 
 def get_files(file_dir, val_ratio):
@@ -47,8 +48,8 @@ def get_files(file_dir, val_ratio):
     all_label_list = list(temp[:, 1])
 
     # just use 500 images to test, when training, delete the following two lines
-    all_image_list = all_image_list[:30000]
-    all_label_list = all_label_list[:30000]
+    # all_image_list = all_image_list[:30000]
+    # all_label_list = all_label_list[:30000]
 
     # split data to training data and validation data
     n_sample = len(all_label_list)  # number of all samples
@@ -167,9 +168,9 @@ def plot_images(images, labels, title):
 if __name__ == '__main__':
 
 
-    dataset_path = '/home/liming/Documents/datasets/PKLot/PKLotSegmented'
-    dataset_path = '/home/liming/Documents/datasets/PKLot/PKLotSegmented'
-    tfrecords_path = '/home/liming/Documents/datasets/PKLot/tfrecords'
+    dataset_path = '/home/bc/Documents/datasets/PKLot/PKLotSegmented'
+    dataset_path = '/home/bc/Documents/datasets/PKLot/PKLotSegmented'
+    tfrecords_path = '/home/bc/Documents/datasets/PKLot/tfrecords'
 
     train_tfrecords_name = 'train'
     val_tfrecords_name = 'val'
