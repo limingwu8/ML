@@ -99,6 +99,7 @@ def run_training():
                 else:
                     print('No checkpoint file found')
                 test_images, test_labels = sess.run([segment_images, segment_labels])
+
                 prediction = sess.run(train_logits, feed_dict={x: test_images[:BATCH_SIZE]})
                 max_index = np.argmax(prediction, 1)
                 print('prediction:', max_index)
@@ -129,43 +130,7 @@ def run_training():
 
         coord.join(threads)
 
-# def evaluate_one_image():
-#     BATCH_SIZE = 64
-#     segment_images, segment_labels = segment_nparray(img_path, xml_path)
-#     # rand = random.randint(0,9)
-#     segment_images = segment_images[0:BATCH_SIZE]
-#     segment_labels = segment_labels[0:BATCH_SIZE]   # 1
-#
-#     segment_images = segment_images.reshape(BATCH_SIZE, 28, 28, 1)
-#
-#     with tf.Graph().as_default():
-#
-#         N_CLASSES = 2
-#
-#         segment_images = tf.cast(segment_images, tf.float32)
-#         logit = inference(segment_images, BATCH_SIZE, N_CLASSES)
-#
-#         logs_train_dir = './logs/train/'
-#         saver = tf.train.Saver()
-#
-#         with tf.Session() as sess:
-#             print("Reading checkpoints...")
-#             ckpt = tf.train.get_checkpoint_state(logs_train_dir)
-#             if ckpt and ckpt.model_checkpoint_path:
-#                 global_step = ckpt.model_checkpoint_path.split('/')[-1].split('-')[-1]
-#                 saver.restore(sess, ckpt.model_checkpoint_path)
-#                 print('Loading success, global_step is %s' % global_step)
-#             else:
-#                 print('No checkpoint file found')
-#
-#             prediction = sess.run(logit)
-#             max_index = np.argmax(prediction,1)
-#             print('prediction: ',max_index)
-#             print('segment_labels: ',segment_labels)
-#             print('Accuracy: ',sum(max_index == segment_labels[:BATCH_SIZE]) / BATCH_SIZE)
-#
-#     print()
-def evaluate_one_image():
+def evaluate_any_number_images():
     BATCH_SIZE = 64
     segment_images, segment_labels = segment(img_path, xml_path)
     # rand = random.randint(0,9)
@@ -173,6 +138,11 @@ def evaluate_one_image():
     segment_labels = segment_labels[0:BATCH_SIZE]   # 1
 
     segment_images = tf.reshape(segment_images,[BATCH_SIZE, 28, 28, 1])
+
+    sess = tf.Session()
+    with sess.as_default():
+        segment_images, segment_labels = tf.get_default_session().run(segment_images, segment_labels)
+
 
     with tf.Graph().as_default():
 
@@ -202,4 +172,4 @@ def evaluate_one_image():
     print()
 if __name__ == '__main__':
     # run_training()
-    evaluate_one_image()
+    evaluate_any_number_images()
