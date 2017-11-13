@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 from pandas import DataFrame
 from pandas import Series
 from pandas import concat
@@ -142,18 +144,18 @@ def evaluate_forecasts(test, forecasts, n_lag, n_seq, sensor_name):
         predicted = [forecast[i] for forecast in forecasts]
         rmse = sqrt(mean_squared_error(actual, predicted))
         rmse_percent = rmse/np.mean(actual)
-        if save_all_info:
+        if SAVE_INFO:
             # save data to pickle
-            pickle.dump(actual, output)
-            pickle.dump(predicted,output)
+            pickle.dump(actual, pkl)
+            pickle.dump(predicted,pkl)
         print('t+%d RMSE: %f, error percent: %f%%' % ((i+1), rmse, rmse_percent*100))
 
-        if save_all_info:
+        if SAVE_INFO:
             logs.write('t+%d RMSE: %f, error percent: %f%%\n' % ((i+1), rmse, rmse_percent*100))
 
 
 # plot the forecasts in the context of the original dataset
-def plot_forecasts(series, forecasts, n_test):
+def plot_forecasts(series, forecasts, n_test, sensor_name):
     # plot the entire dataset in blue
     fig = pyplot.figure()
     pyplot.plot(series.values)
@@ -173,7 +175,7 @@ def plot_forecasts(series, forecasts, n_test):
     for i in range(1,X.shape[1]):
         pyplot.plot(X[:,i],Y[:,i])
 
-    # plot zoomed in figure
+    ## plot zoomed in figure, for the next three steps
     fig_zoomed = pyplot.figure()
     # plot original data
     pyplot.plot(range(X[0, 0], X[X.shape[0] - 1, X.shape[1] - 1] + 1),
@@ -182,17 +184,30 @@ def plot_forecasts(series, forecasts, n_test):
     for i in range(1,X.shape[1]):
         pyplot.plot(X[:,i],Y[:,i])
 
-    # show the plot
-    # fig.show()
-    # fig_zoomed.show()
+    ## plot zoomed in figure, for the only next one step
+    fig_zoomed_next_one = pyplot.figure()
+    # plot original data
+    pyplot.plot(range(X[0, 0], X[X.shape[0] - 1, X.shape[1] - 1] + 1),
+                series[X[0, 0]: X[X.shape[0] - 1, X.shape[1] - 1] + 1])
+    pyplot.plot(X[:,1],Y[:,1])
 
-    if save_all_info:
+
+    # show the plot
+    fig.show()
+    fig_zoomed.show()
+    fig_zoomed_next_one.show()
+
+    if SAVE_INFO:
         fig.set_size_inches(18.5, 10.5)
-        fig.savefig('/home/bc/Pictures/multi-step-prediction/' + file_name + '-' + folder_name + '.png',
-                    bbox_inches='tight', dpi=200)
+        fig.savefig(path + sensor_name + '.png', bbox_inches='tight', dpi=200)
         fig_zoomed.set_size_inches(18.5, 10.5)
-        fig_zoomed.savefig('/home/bc/Pictures/multi-step-prediction/' + file_name + '_zoomed-' + folder_name + '.png',
-                    bbox_inches='tight', dpi=200)
+        fig_zoomed.savefig(path + sensor_name + '-zoomed.png', bbox_inches='tight', dpi=200)
+        fig_zoomed_next_one.savefig(path + sensor_name + '-zoomed-next_one_step.png',
+                                    bbox_inches='tight', dpi=200)
+    pyplot.close(fig)
+    pyplot.close(fig_zoomed)
+    pyplot.close(fig_zoomed_next_one)
+
 
 def get_files(file_dir):
     '''
@@ -207,64 +222,72 @@ def get_files(file_dir):
             dataset_path.append(os.path.join(root,file))
     return dataset_path
 
+def run_train():
+    dataset_path = get_files('./dataset/')
+    for i in range(len(dataset_path)):
+        file_path = dataset_path[i]
+        folder_name = file_path.split('/')[-2]
+        file_name = file_path.split('/')[-1]
+        file_name = file_name.split('.')[0]
+        sensor_name = file_name + '-' + folder_name
 
-dataset_path = get_files('./dataset/')
-save_all_info = 1
+        print('processing the dataset of ', sensor_name)
+        if SAVE_INFO:
+            logs.write(file_name + '-' + folder_name + '\n')
 
-if save_all_info:
-    logs = open('/home/bc/Pictures/multi-step-prediction/logs.txt','w')
-    output = open('/home/bc/Pictures/multi-step-prediction/data.pkl','wb')
+        # load dataset
+        series = read_csv(file_path, sep=',')
+        header = list(series.columns.values)
 
-for i in range(len(dataset_path)):
-    path = dataset_path[i]
-    folder_name = path.split('/')[-2]
-    file_name = path.split('/')[-1]
-    file_name = file_name.split('.')[0]
-    sensor_name = file_name + '-' + folder_name
+        raw_time = series[header[0]]
+        raw_values = series[header[1]]
 
-    print('processing the dataset of ', sensor_name)
-    if save_all_info:
-        logs.write(file_name + '-' + folder_name + '\n')
+        raw_time = raw_time.values
+        raw_datetime = [datetime.datetime.strptime(
+            i, "%d-%b-%Y %H:%M:%S") for i in raw_time]
+        raw_values = raw_values.values
 
-    # load dataset
-    series = read_csv(path, sep=',')
-    header = list(series.columns.values)
+        series_time = Series(raw_time)
+        series_values = Series(raw_values)
 
-    raw_time = series[header[0]]
-    raw_values = series[header[1]]
-
-    raw_time = raw_time.values
-    raw_datetime = [datetime.datetime.strptime(
-        i, "%d-%b-%Y %H:%M:%S") for i in raw_time]
-    raw_values = raw_values.values
-
-    series_time = Series(raw_time)
-    series_values = Series(raw_values)
-
-    # configure
-    n_lag = 1
-    n_seq = 3   # forecast the next n_seq
-    n_test = int(0.2*series.shape[0])
-    # n_epochs = 1500
-    n_epochs = 2000
-    n_batch = 1
-    n_neurons = 10
-    # prepare data
-    scaler, train, test = prepare_data(series_values, n_test, n_lag, n_seq)
-    # fit model
-    model = fit_lstm(train, n_lag, n_seq, n_batch, n_epochs, n_neurons)
-    # make forecasts
-    forecasts = make_forecasts(model, n_batch, train, test, n_lag, n_seq)
-    # inverse transform forecasts and test
-    forecasts = inverse_transform(series_values, forecasts, scaler, n_test+2)
-    actual = [row[n_lag:] for row in test]
-    actual = inverse_transform(series_values, actual, scaler, n_test+2)
-    # evaluate forecasts
-    evaluate_forecasts(actual, forecasts, n_lag, n_seq, sensor_name)
-    # plot forecasts
-    plot_forecasts(series_values, forecasts, n_test+2)
+        # configure
+        n_lag = 1
+        n_seq = 3  # forecast the next n_seq
+        n_test = int(0.2 * series.shape[0])
+        # n_epochs = 1500
+        n_epochs = 1
+        n_batch = 1
+        n_neurons = 1
+        # prepare data
+        scaler, train, test = prepare_data(series_values, n_test, n_lag, n_seq)
+        # fit model
+        model = fit_lstm(train, n_lag, n_seq, n_batch, n_epochs, n_neurons)
+        # make forecasts
+        forecasts = make_forecasts(model, n_batch, train, test, n_lag, n_seq)
+        # inverse transform forecasts and test
+        forecasts = inverse_transform(series_values, forecasts, scaler, n_test + 2)
+        actual = [row[n_lag:] for row in test]
+        actual = inverse_transform(series_values, actual, scaler, n_test + 2)
+        # evaluate forecasts
+        evaluate_forecasts(actual, forecasts, n_lag, n_seq, sensor_name)
+        # plot forecasts
+        plot_forecasts(series_values, forecasts, n_test + 2, sensor_name)
 
 
-if save_all_info:
-    logs.close()
-    output.close()
+
+SAVE_INFO = 1
+RUN_ON_LOCAL = 1
+
+path = ''
+
+if RUN_ON_LOCAL:
+    path = '/home/bc/Documents/USS/multi-step-prediction/'
+else:
+    path = '/home/PNW/wu1114/Documents/USS/multi-step-prediction/'
+
+if SAVE_INFO:
+    with open(path+'logs.txt','w') as logs:
+        with open(path+'data.pkl','wb') as pkl:
+            run_train()
+else:
+    run_train()
