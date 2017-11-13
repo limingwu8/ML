@@ -12,6 +12,9 @@ from math import sqrt
 from matplotlib import pyplot
 from numpy import array
 import datetime
+import numpy as np
+import os
+import pickle
 
 
 # date-time parsing function for loading the dataset
@@ -133,61 +136,135 @@ def inverse_transform(series, forecasts, scaler, n_test):
         inverted.append(inv_diff)
     return inverted
 # evaluate the RMSE for each forecast time step
-def evaluate_forecasts(test, forecasts, n_lag, n_seq):
+def evaluate_forecasts(test, forecasts, n_lag, n_seq, sensor_name):
     for i in range(n_seq):
         actual = [row[i] for row in test]
         predicted = [forecast[i] for forecast in forecasts]
         rmse = sqrt(mean_squared_error(actual, predicted))
-        print('t+%d RMSE: %f' % ((i+1), rmse))
+        rmse_percent = rmse/np.mean(actual)
+        if save_all_info:
+            # save data to pickle
+            pickle.dump(actual, output)
+            pickle.dump(predicted,output)
+        print('t+%d RMSE: %f, error percent: %f%%' % ((i+1), rmse, rmse_percent*100))
+
+        if save_all_info:
+            logs.write('t+%d RMSE: %f, error percent: %f%%\n' % ((i+1), rmse, rmse_percent*100))
+
 
 # plot the forecasts in the context of the original dataset
 def plot_forecasts(series, forecasts, n_test):
     # plot the entire dataset in blue
+    fig = pyplot.figure()
     pyplot.plot(series.values)
-    # plot the forecasts in red
+    # only plot the last forecast value
+    X = []
+    Y = []
     for i in range(len(forecasts)):
+
         off_s = len(series) - n_test + i - 1
         off_e = off_s + len(forecasts[i]) + 1
         xaxis = [x for x in range(off_s, off_e)]
         yaxis = [series.values[off_s]] + forecasts[i]
-        pyplot.plot(xaxis, yaxis, color='red')
+        X.append(xaxis)
+        Y.append(yaxis)
+    X = np.array(X)
+    Y = np.array(Y)
+    for i in range(1,X.shape[1]):
+        pyplot.plot(X[:,i],Y[:,i])
+
+    # plot zoomed in figure
+    fig_zoomed = pyplot.figure()
+    # plot original data
+    pyplot.plot(range(X[0, 0], X[X.shape[0] - 1, X.shape[1] - 1] + 1),
+                series[X[0, 0]: X[X.shape[0] - 1, X.shape[1] - 1]+1])
+    # plot forecasts data
+    for i in range(1,X.shape[1]):
+        pyplot.plot(X[:,i],Y[:,i])
+
     # show the plot
-    pyplot.show()
+    # fig.show()
+    # fig_zoomed.show()
 
-# load dataset
-series = read_csv('./dataset/sample_1_day/PT-203.csv', header=0)
-header = list(series.columns.values)
+    if save_all_info:
+        fig.set_size_inches(18.5, 10.5)
+        fig.savefig('/home/bc/Pictures/multi-step-prediction/' + file_name + '-' + folder_name + '.png',
+                    bbox_inches='tight', dpi=200)
+        fig_zoomed.set_size_inches(18.5, 10.5)
+        fig_zoomed.savefig('/home/bc/Pictures/multi-step-prediction/' + file_name + '_zoomed-' + folder_name + '.png',
+                    bbox_inches='tight', dpi=200)
 
-raw_time = series[header[0]]
-raw_values = series[header[1]]
+def get_files(file_dir):
+    '''
+    Args:
+        file_dir: file directory
+    Returns:
+        list of file path
+    '''
+    dataset_path = []
+    for root, dirs, files in os.walk(file_dir):
+        for file in files:
+            dataset_path.append(os.path.join(root,file))
+    return dataset_path
 
-raw_time = raw_time.values
-raw_datetime = [datetime.datetime.strptime(
-    i, "%d-%b-%Y %H:%M:%S") for i in raw_time]
-raw_values = raw_values.values
 
-series_time = Series(raw_time)
-series_values = Series(raw_values)
+dataset_path = get_files('./dataset/')
+save_all_info = 1
 
-# configure
-n_lag = 1
-n_seq = 1
-n_test = int(0.2*series.shape[0])
-# n_epochs = 1500
-n_epochs = 100
-n_batch = 1
-n_neurons = 1
-# prepare data
-scaler, train, test = prepare_data(series_values, n_test, n_lag, n_seq)
-# fit model
-model = fit_lstm(train, n_lag, n_seq, n_batch, n_epochs, n_neurons)
-# make forecasts
-forecasts = make_forecasts(model, n_batch, train, test, n_lag, n_seq)
-# inverse transform forecasts and test
-forecasts = inverse_transform(series_values, forecasts, scaler, n_test+2)
-actual = [row[n_lag:] for row in test]
-actual = inverse_transform(series_values, actual, scaler, n_test+2)
-# evaluate forecasts
-evaluate_forecasts(actual, forecasts, n_lag, n_seq)
-# plot forecasts
-plot_forecasts(series_values, forecasts, n_test+2)
+if save_all_info:
+    logs = open('/home/bc/Pictures/multi-step-prediction/logs.txt','w')
+    output = open('/home/bc/Pictures/multi-step-prediction/data.pkl','wb')
+
+for i in range(len(dataset_path)):
+    path = dataset_path[i]
+    folder_name = path.split('/')[-2]
+    file_name = path.split('/')[-1]
+    file_name = file_name.split('.')[0]
+    sensor_name = file_name + '-' + folder_name
+
+    print('processing the dataset of ', sensor_name)
+    if save_all_info:
+        logs.write(file_name + '-' + folder_name + '\n')
+
+    # load dataset
+    series = read_csv(path, sep=',')
+    header = list(series.columns.values)
+
+    raw_time = series[header[0]]
+    raw_values = series[header[1]]
+
+    raw_time = raw_time.values
+    raw_datetime = [datetime.datetime.strptime(
+        i, "%d-%b-%Y %H:%M:%S") for i in raw_time]
+    raw_values = raw_values.values
+
+    series_time = Series(raw_time)
+    series_values = Series(raw_values)
+
+    # configure
+    n_lag = 1
+    n_seq = 3   # forecast the next n_seq
+    n_test = int(0.2*series.shape[0])
+    # n_epochs = 1500
+    n_epochs = 2000
+    n_batch = 1
+    n_neurons = 10
+    # prepare data
+    scaler, train, test = prepare_data(series_values, n_test, n_lag, n_seq)
+    # fit model
+    model = fit_lstm(train, n_lag, n_seq, n_batch, n_epochs, n_neurons)
+    # make forecasts
+    forecasts = make_forecasts(model, n_batch, train, test, n_lag, n_seq)
+    # inverse transform forecasts and test
+    forecasts = inverse_transform(series_values, forecasts, scaler, n_test+2)
+    actual = [row[n_lag:] for row in test]
+    actual = inverse_transform(series_values, actual, scaler, n_test+2)
+    # evaluate forecasts
+    evaluate_forecasts(actual, forecasts, n_lag, n_seq, sensor_name)
+    # plot forecasts
+    plot_forecasts(series_values, forecasts, n_test+2)
+
+
+if save_all_info:
+    logs.close()
+    output.close()
