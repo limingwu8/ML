@@ -9,6 +9,7 @@ import skimage.io as io
 import scipy.misc
 from PIL import Image
 from PKLot2.mark_image import *
+from PKLot2.data_augmentation import *
 
 
 def get_files(file_dir, val_ratio):
@@ -64,6 +65,59 @@ def get_files(file_dir, val_ratio):
     val_labels = [int(float(i)) for i in val_labels]
 
     return tra_images, tra_labels, val_images, val_labels
+
+
+def get_batch(image_path, label_path, image_W, image_H, batch_size, capacity):
+    '''
+    Args:
+        image: list type
+        label: list type
+        image_W: image width
+        image_H: image height
+        batch_size: batch size
+        capacity: the maximum elements in queue
+    Returns:
+        image_batch: 4D tensor [batch_size, width, height, 3], dtype=tf.float32
+        label_batch: 1D tensor [batch_size], dtype=tf.int32
+    '''
+
+    image = tf.cast(image_path, tf.string)
+    label = tf.cast(label_path, tf.int32)
+
+    # make an input queue
+    input_queue = tf.train.slice_input_producer([image, label])
+
+    label = input_queue[1]
+    image_contents = tf.read_file(input_queue[0])
+    image = tf.image.decode_jpeg(image_contents, channels=1)
+
+    ######################################
+    # data argumentation should go to here
+    ######################################
+
+    image = tf.image.resize_image_with_crop_or_pad(image, image_W, image_H)
+
+    # if you want to test the generated batches of images, you might want to comment the following line.
+    # 如果想看到正常的图片，请注释掉111行（标准化）和 126行（image_batch = tf.cast(image_batch, tf.float32)）
+    # 训练时不要注释掉！
+    image = tf.image.per_image_standardization(image)
+
+    image_batch, label_batch = tf.train.batch([image, label],
+                                              batch_size=batch_size,
+                                              num_threads=64,
+                                              capacity=capacity)
+
+    # you can also use shuffle_batch
+    #    image_batch, label_batch = tf.train.shuffle_batch([image,label],
+    #                                                      batch_size=BATCH_SIZE,
+    #                                                      num_threads=64,
+    #                                                      capacity=CAPACITY,
+    #                                                      min_after_dequeue=CAPACITY-1)
+
+    label_batch = tf.reshape(label_batch, [batch_size])
+    image_batch = tf.cast(image_batch, tf.float32)
+
+    return image_batch, label_batch
 
 
 def int64_feature(value):
@@ -152,6 +206,9 @@ def read_and_decode(tfrecords_file, batch_size):
         num_threads=64,
         capacity=2000
     )
+
+    # augment_data(image_batch, label_batch)
+
     return image_batch, tf.reshape(label_batch, [batch_size])
 
 def plot_images(images, labels, title):

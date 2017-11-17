@@ -14,8 +14,12 @@ def run_training():
     IMG_W = 28
     IMG_H = 28
     CHANNEL = 1
-    is_train = 2
+    CAPACITY = 2000
+    is_train = 1
+    read_from_tfrecord = 0
+    val_ratio = 0.2
 
+    dataset_path = '/home/bc/Documents/datasets/PKLot/PKLotSegmented'
     tfrecords_path = '/home/bc/Documents/datasets/PKLot/tfrecords'
     train_tfrecords_name = 'train'
     val_tfrecords_name = 'val'
@@ -24,15 +28,19 @@ def run_training():
     img_path = '/home/bc/Documents/datasets/PKLot/PKLot/PUCPR/Cloudy/2012-09-12/2012-09-12_07_34_01.jpg'
     xml_path = '/home/bc/Documents/datasets/PKLot/PKLot/PUCPR/Cloudy/2012-09-12/2012-09-12_07_34_01.xml'
 
-
-    # read data from tfrecords file
-    train_batch, train_label_batch = read_and_decode(
-                            os.path.join(tfrecords_path, train_tfrecords_name + '.tfrecords'), BATCH_SIZE)
-    val_batch, val_label_batch = read_and_decode(os.path.join(tfrecords_path, train_tfrecords_name + '.tfrecords'),
-                                                 BATCH_SIZE)
-    # load the segmented images for testing
-    segment_images, segment_labels = segment(img_path, xml_path)
-    segment_images = tf.reshape(segment_images,[-1,28,28,1])
+    if read_from_tfrecord :
+        # read data from tfrecords file
+        train_batch, train_label_batch = read_and_decode(
+                                os.path.join(tfrecords_path, train_tfrecords_name + '.tfrecords'), BATCH_SIZE)
+        val_batch, val_label_batch = read_and_decode(os.path.join(tfrecords_path, train_tfrecords_name + '.tfrecords'),
+                                                     BATCH_SIZE)
+        # load the segmented images for testing
+        segment_images, segment_labels = segment(img_path, xml_path)
+        segment_images = tf.reshape(segment_images,[-1,28,28,1])
+    else:
+        # read directly from folder
+        tra_images, tra_labels, val_images, val_labels = get_files(dataset_path, val_ratio)
+        train, train_label = get_batch(tra_images, tra_labels, IMG_W, IMG_H, BATCH_SIZE, CAPACITY)
 
     x = tf.placeholder(tf.float32, shape=[BATCH_SIZE, IMG_W, IMG_H, CHANNEL])
     y_ = tf.placeholder(tf.int32, shape=[BATCH_SIZE])
@@ -89,7 +97,7 @@ def run_training():
                     if step % 500 == 0 or (step + 1) == MAX_STEP:
                         checkpoint_path = os.path.join(logs_train_dir, 'model.ckpt')
                         saver.save(sess, checkpoint_path, global_step=step)
-            elif is_train==2:
+            elif is_train == 2:
                 print("Reading checkpoints...")
                 ckpt = tf.train.get_checkpoint_state(logs_train_dir)
                 if ckpt and ckpt.model_checkpoint_path:
@@ -141,7 +149,8 @@ def evaluate_any_number_images():
 
     sess = tf.Session()
     with sess.as_default():
-        segment_images, segment_labels = tf.get_default_session().run(segment_images, segment_labels)
+        segment_images = segment_images.eval()
+        segment_labels = segment_labels.eval()
 
 
     with tf.Graph().as_default():
@@ -171,5 +180,5 @@ def evaluate_any_number_images():
 
     print()
 if __name__ == '__main__':
-    # run_training()
-    evaluate_any_number_images()
+    run_training()
+    # evaluate_any_number_images()
