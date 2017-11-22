@@ -65,7 +65,7 @@ def prepare_data(series, n_test, n_lag, n_seq):
 	return train, test
 
 # load dataset
-series = read_csv('../../RNN/short_term_prediction/shampoo-sales.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
+series = read_csv('../../RNN/time_series_prediction/shampoo-sales.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
 # configure
 n_lag = 1
 n_seq = 3

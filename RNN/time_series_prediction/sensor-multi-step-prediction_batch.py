@@ -1,5 +1,5 @@
-import matplotlib
-matplotlib.use('Agg')
+# import matplotlib
+# matplotlib.use('Agg')
 from pandas import DataFrame
 from pandas import Series
 from pandas import concat
@@ -275,7 +275,7 @@ def run_train():
 
 
 
-SAVE_INFO = 1
+SAVE_INFO = 0
 RUN_ON_LOCAL = 1
 
 path = ''

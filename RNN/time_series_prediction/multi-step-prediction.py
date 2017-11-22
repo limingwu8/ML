@@ -154,7 +154,7 @@ def plot_forecasts(series, forecasts, n_test):
 	pyplot.show()
 
 # load dataset
-series = read_csv('shampoo-sales.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
+series = read_csv('./dataset/sample_1_day/OIL_RETURN_TEMPERATURE.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
 # configure
 n_lag = 1
 n_seq = 3

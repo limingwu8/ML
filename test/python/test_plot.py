@@ -5,7 +5,7 @@ from pandas import read_csv
 from pandas import datetime
 import matplotlib.pyplot as plt
 
-series = read_csv('../../RNN/short_term_prediction/sensor_data2.csv', header=0)
+series = read_csv('../../RNN/time_series_prediction/sensor_data2.csv', header=0)
 
 plt.plot(series)
 

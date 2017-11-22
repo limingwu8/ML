@@ -7,7 +7,7 @@ from pandas import read_csv
 from pandas import datetime
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
-from keras.models import Sequential
+from keras.models import Sequential,load_model
 from keras.layers import Dense
 from keras.layers import LSTM
 from math import sqrt
@@ -100,7 +100,7 @@ def forecast_lstm(model, X, n_batch):
     return [x for x in forecast[0, :]]
 
 # evaluate the persistence model
-def make_forecasts(model, n_batch, train, test, n_lag, n_seq):
+def make_forecasts(model, n_batch, test, n_lag, n_seq):
     forecasts = list()
     for i in range(len(test)):
         X, y = test[i, 0:n_lag], test[i, n_lag:]
@@ -157,7 +157,7 @@ def evaluate_forecasts(test, forecasts, n_lag, n_seq, sensor_name):
 # plot the forecasts in the context of the original dataset
 def plot_forecasts(series, forecasts, n_test, sensor_name, time, n_seq):
 
-    plot_one_line = 1
+    plot_one_line = 0
 
     # plot the entire dataset in blue
     fig = pyplot.figure()
@@ -218,8 +218,8 @@ def get_files(file_dir):
     return dataset_path
 
 def run_train():
-    file_path = './dataset/sample_1_hour/TANK_LEVEL.csv'
-    sensor_name = 'TANK_LEVEL-sample_1_hour'
+    file_path = './dataset/sample_1_day/OIL_RETURN_TEMPERATURE.csv'
+    sensor_name = 'OIL_RETURN_TEMPERATURE-sample_1_day'
 
     print('processing the dataset of ', sensor_name)
     if SAVE_INFO:
@@ -243,10 +243,10 @@ def run_train():
 
     # configure
     n_lag = 1
-    n_seq = 24  # forecast the next n_seq
+    n_seq = 12  # forecast the next n_seq
     n_test = int(0.2 * series.shape[0])
     # n_epochs = 1500
-    n_epochs = 1500
+    n_epochs = 1
     n_batch = 1
     n_neurons = 1
 
@@ -254,20 +254,70 @@ def run_train():
     scaler, train, test = prepare_data(series_values, n_test, n_lag, n_seq)
     # fit model
     model = fit_lstm(train, n_lag, n_seq, n_batch, n_epochs, n_neurons)
+    # save model
+    model.save('model_01.h5')
     # make forecasts
-    forecasts = make_forecasts(model, n_batch, train, test, n_lag, n_seq)
+    forecasts = make_forecasts(model, n_batch, test, n_lag, n_seq)
     # inverse transform forecasts and test
-    forecasts = inverse_transform(series_values, forecasts, scaler, n_test + 2)
+    forecasts = inverse_transform(series_values, forecasts, scaler, n_test + n_seq - 1)
     actual = [row[n_lag:] for row in test]
-    actual = inverse_transform(series_values, actual, scaler, n_test + 2)
+    actual = inverse_transform(series_values, actual, scaler, n_test + n_seq - 1)
+    # evaluate forecasts
+    evaluate_forecasts(actual, forecasts, n_lag, n_seq, sensor_name)
+    # plot forecasts
+    plot_forecasts(series_values, forecasts, n_test, sensor_name, raw_datetime, n_seq)
+
+def run_test():
+    model = load_model('model_01.h5')
+    file_path = './dataset/sample_1_day/OIL_RETURN_TEMPERATURE.csv'
+    sensor_name = 'OIL_RETURN_TEMPERATURE-sample_1_day'
+
+    print('processing the dataset of ', sensor_name)
+    if SAVE_INFO:
+        logs.write(sensor_name + '\n')
+
+    # load dataset
+    series = read_csv(file_path, sep=',')
+    header = list(series.columns.values)
+
+    raw_time = series[header[0]]
+    raw_values = series[header[1]]
+
+    raw_time = raw_time.values
+    raw_datetime = [datetime.datetime.strptime(
+        i, "%d-%b-%Y %H:%M:%S") for i in raw_time]
+    raw_values = raw_values.values
+
+    series_time = Series(raw_time)
+    series_values = Series(raw_values)
+
+    # configure
+    n_lag = 1
+    n_seq = 12  # forecast the next n_seq
+    n_test = int(0.2 * series.shape[0])
+    # n_epochs = 1500
+    n_epochs = 1
+    n_batch = 1
+    n_neurons = 1
+    # prepare data
+    scaler, train, test = prepare_data(series_values, n_test, n_lag, n_seq)
+    # make forecasts
+    forecasts = make_forecasts(model, n_batch, test, n_lag, n_seq)
+    # inverse transform forecasts and test
+    forecasts = inverse_transform(series_values, forecasts, scaler, n_test + n_seq - 1)
+    actual = [row[n_lag:] for row in test]
+    actual = inverse_transform(series_values, actual, scaler, n_test + n_seq - 1)
     # evaluate forecasts
     evaluate_forecasts(actual, forecasts, n_lag, n_seq, sensor_name)
     # plot forecasts
     plot_forecasts(series_values, forecasts, n_test, sensor_name, raw_datetime, n_seq)
 
 
+
+
 SAVE_INFO = 0
 RUN_ON_LOCAL = 1
+TRAIN = 0
 
 path = ''
 
@@ -279,6 +329,12 @@ else:
 if SAVE_INFO:
     with open(path+'logs.txt','w') as logs:
         with open(path+'data.pkl','wb') as pkl:
-            run_train()
+            if TRAIN:
+                run_train()
+            else:
+                run_test()
 else:
-    run_train()
+    if TRAIN:
+        run_train()
+    else:
+        run_test()
