@@ -1,85 +1,123 @@
-from keras.datasets import cifar10
-from keras.models import Sequential
-from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.layers import Conv2D, MaxPooling2D, GlobalMaxPooling2D
-from keras.optimizers import SGD, RMSprop, adam
-from keras.utils import np_utils
-from keras.optimizers import Adam
-from keras.callbacks import TensorBoard
+import os.path
+import math
 
-(X_train, y_train),(X_test, y_test) = cifar10.load_data()
-y_train = np_utils.to_categorical(y_train,10)
-y_test = np_utils.to_categorical(y_test,10)
-print("X_train shape:%s, y_train shape:%s"%(X_train.shape,y_train.shape))
-print("X_test shape:%s, y_test shape:%s"%(X_test.shape,y_test.shape))
+import numpy as np
+import tensorflow as tf
 
-model = Sequential()
+from CNN.CIFAR10.cifar10_input import *
+from CNN.CIFAR10.cifar10_model import *
 
-model.add(Conv2D(32, (3, 3), padding='same',input_shape=X_train.shape[1:]))
-model.add(Activation('relu'))
-model.add(Conv2D(32, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(32, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(48, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(48, (3, 3), padding='same'))
-model.add(Activation('relu'))
+BATCH_SIZE = 128
+learning_rate = 0.05
+MAX_STEP = 100  # with this setting, it took less than 30 mins on my laptop to train.
 
-model.add(MaxPooling2D(pool_size=(2,2)))
-model.add(Dropout(0.25))
+# %% Train the model on the training data
+def train():
+    my_global_step = tf.Variable(0, name='global_step', trainable=False)
 
-model.add(Conv2D(80, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(80, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(80, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(80, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(80, (3, 3), padding='same'))
-model.add(Activation('relu'))
+    data_dir = '/home/liming/Documents/datasets/cifar-10-batches-bin/'
+    log_dir = '/home/liming/PycharmProjects/ML/CNN/CIFAR10/logs/'
 
-model.add(MaxPooling2D(pool_size=(2,2)))
-model.add(Dropout(0.25))
+    images, labels = read_cifar10(data_dir=data_dir,
+                                                is_train=True,
+                                                batch_size=BATCH_SIZE,
+                                                shuffle=True)
+    logits = inference(images, BATCH_SIZE)
 
-model.add(Conv2D(128, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(128, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(128, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(128, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(128, (3, 3), padding='same'))
-model.add(Activation('relu'))
+    loss = losses(logits, labels)
 
-model.add(MaxPooling2D(pool_size=(2,2)))
-model.add(Dropout(0.25))
+    optimizer = tf.train.GradientDescentOptimizer(learning_rate)
+    train_op = optimizer.minimize(loss, global_step=my_global_step)
 
-# Dense Layer
-model.add(Flatten())
-model.add(Dense(units=1024))
-model.add(Activation('relu'))
-model.add(Dense(units=64))
-model.add(Activation('relu'))
-model.add(Dense(units=10))
-model.add(Activation('softmax'))
-# optimizer
-adam = Adam(lr=1e-4)
-# compile
-model.compile(optimizer=adam,
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
+    saver = tf.train.Saver(tf.global_variables())
+    summary_op = tf.summary.merge_all()
 
-# train network
-print('Training...')
-tensorboard = TensorBoard(log_dir='./logs', histogram_freq=0,
-                          write_graph=True, write_images=False)
-model.fit(X_train,y_train,
-          batch_size=32,
-          epochs=200,
-          callbacks=[tensorboard])
-loss,accuracy = model.evaluate(X_test,y_test)
-print("\nloss:",loss)
-print("accuracy:",accuracy)
+    init = tf.global_variables_initializer()
+    sess = tf.Session()
+    sess.run(init)
+
+    coord = tf.train.Coordinator()
+    threads = tf.train.start_queue_runners(sess=sess, coord=coord)
+
+    summary_writer = tf.summary.FileWriter(log_dir, sess.graph)
+
+    try:
+        for step in np.arange(MAX_STEP):
+            if coord.should_stop():
+                break
+            _, loss_value = sess.run([train_op, loss])
+
+            if step % 50 == 0:
+                print('Step: %d, loss: %.4f' % (step, loss_value))
+
+            if step % 100 == 0:
+                summary_str = sess.run(summary_op)
+                summary_writer.add_summary(summary_str, step)
+
+            if step % 2000 == 0 or (step + 1) == MAX_STEP:
+                checkpoint_path = os.path.join(log_dir, 'model.ckpt')
+                saver.save(sess, checkpoint_path, global_step=step)
+
+    except tf.errors.OutOfRangeError:
+        print('Done training -- epoch limit reached')
+    finally:
+        coord.request_stop()
+
+    coord.join(threads)
+    sess.close()
+
+
+# %% To test the model on the test data
+def evaluate():
+    with tf.Graph().as_default():
+
+        test_dir = '/home/liming/Documents/datasets/cifar-10-batches-bin/'
+        log_dir = '/home/liming/PycharmProjects/ML/CNN/CIFAR10/logs/'
+        n_test = 10000
+
+        # reading test data
+        images, labels = read_cifar10(data_dir=test_dir,
+                                        is_train=False,
+                                        batch_size=BATCH_SIZE,
+                                        shuffle=False)
+
+        logits = inference(images, BATCH_SIZE)
+        top_k_op = tf.nn.in_top_k(logits, labels, 1)
+        saver = tf.train.Saver(tf.global_variables())
+
+        with tf.Session() as sess:
+
+            print("Reading checkpoints...")
+            ckpt = tf.train.get_checkpoint_state(log_dir)
+            if ckpt and ckpt.model_checkpoint_path:
+                global_step = ckpt.model_checkpoint_path.split('/')[-1].split('-')[-1]
+                saver.restore(sess, ckpt.model_checkpoint_path)
+                print('Loading success, global_step is %s' % global_step)
+            else:
+                print('No checkpoint file found')
+                return
+
+            coord = tf.train.Coordinator()
+            threads = tf.train.start_queue_runners(sess=sess, coord=coord)
+
+            try:
+                num_iter = int(math.ceil(n_test / BATCH_SIZE))
+                true_count = 0
+                total_sample_count = num_iter * BATCH_SIZE
+                step = 0
+
+                while step < num_iter and not coord.should_stop():
+                    predictions = sess.run([top_k_op])
+                    true_count += np.sum(predictions)
+                    step += 1
+                    precision = true_count / total_sample_count
+                print('precision = %.3f' % precision)
+            except Exception as e:
+                coord.request_stop(e)
+            finally:
+                coord.request_stop()
+                coord.join(threads)
+
+if __name__=='__main__':
+    # train()
+    evaluate()
