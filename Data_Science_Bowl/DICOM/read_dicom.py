@@ -1,4 +1,4 @@
-import pydicom
+import dicom
 import matplotlib.pylab as plt
 import os
 def get_files(file_dir):
@@ -14,14 +14,14 @@ def get_files(file_dir):
             dataset_path.append(os.path.join(root,file))
     return dataset_path
 
-path = 'C:\\Users\\wu1114\\Documents\\Data_Science_Bowl\\train\\train\\8\\study\\sax_54\\'
+path = 'F:\\datasets\\science_bowl\\train\\1\\study\\2ch_21'
 files = get_files(path)
 for file in files:
     print(file)
 
 ds = []
 for i in range(len(files)):
-    temp = pydicom.read_file(files[i])
+    temp = dicom.read_file(files[i])
     ds.append(temp)
     plt.subplot(1,30,i+1)
     plt.axis('off')
