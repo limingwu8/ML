@@ -275,19 +275,28 @@ def run_train():
 
 
 
-SAVE_INFO = 0
-RUN_ON_LOCAL = 1
+SAVE_INFO = 1       # 1: save information in file, 0: do not save
+RUN_ON_LOCAL = 1    # 1: run on local, 0: run on server
+TRAIN = 1           # 1: train model, 0: load model
 
-path = ''
+# sensor units
+units = {'MAIN_FILTER_IN_PRESSURE':'PSI','MAIN_FILTER_OIL_TEMP':'Fahrenheit',
+         'MAIN_FILTER_OUT_PRESSURE':'PSI','OIL_RETURN_TEMPERATURE':'Fahrenheit',
+         'TANK_FILTER_IN_PRESSURE':'PSI','TANK_FILTER_OUT_PRESSURE':'PSI',
+         'TANK_LEVEL':'Inch','TANK_TEMPERATURE':'Fahrenheit','FT-202B':'Mils',
+         'FT-204B':'Mils','PT-203':'Mils','PT-204.HS':'Mils'}
 
 if RUN_ON_LOCAL:
-    path = '/home/bc/Documents/USS/multi-step-prediction/'
+    PATH = '/home/bc/Documents/USS/compare/'
 else:
-    path = '/home/PNW/wu1114/Documents/USS/multi-step-prediction/'
+    PATH = '/home/PNW/wu1114/Documents/USS/compare/'
 
 if SAVE_INFO:
-    with open(path+'logs.txt','w') as logs:
-        with open(path+'data.pkl','wb') as pkl:
-            run_train()
+    with open(PATH+'logs.txt','w') as logs:
+        with open(PATH+'data.pkl','wb') as pkl:
+            if TRAIN:
+                run_train()
+
 else:
-    run_train()
+    if TRAIN:
+        run_train()
