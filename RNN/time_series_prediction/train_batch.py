@@ -20,12 +20,10 @@ sample_rates_n_seq = {
     'sample_18_hour':(1,2), 'sample_1_day':(1,2)
 }
 for name in sensor_names:
-    if name.__eq__('MAIN_FILTER_OIL_TEMP'):
-        for j in sample_rates_n_seq:
-            if j == 'sample_1_hour':
-                n_seqs = sample_rates_n_seq[j]
-                sample_rate = j
-                for s in n_seqs:
-                    s = Sensor(n_seq = s, n_epochs= n_epochs, dataset_path = dataset_path, sensor_name = name,
-                               sample_rate = sample_rate, root_path = root_path, save_info = 1)
-                    s.run_train()
+    for j in sample_rates_n_seq:
+        n_seqs = sample_rates_n_seq[j]
+        sample_rate = j
+        for s in n_seqs:
+            s = Sensor(n_seq = s, n_epochs= n_epochs, dataset_path = dataset_path, sensor_name = name,
+                       sample_rate = sample_rate, root_path = root_path, save_info = 1)
+            s.run_train()
