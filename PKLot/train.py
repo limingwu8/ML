@@ -1,6 +1,6 @@
-from PKLot2.input_data import *
-from PKLot2.model import *
-from PKLot2.mark_image import *
+from PKLot.input_data import *
+from PKLot.model import *
+from PKLot.mark_image import *
 import tensorflow as tf
 import random
 

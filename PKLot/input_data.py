@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 import skimage.io as io
 import scipy.misc
 from PIL import Image
-from PKLot2.mark_image import *
-from PKLot2.data_augmentation import *
+from PKLot.mark_image import *
+from PKLot.data_augmentation import *
 
 
 def get_files(file_dir, val_ratio):
