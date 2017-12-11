@@ -1,6 +1,6 @@
 # Name Entity Recognition
 # Named entity recognition is useful to quickly find out what the subjects of discussion are.
-# NLTK can either recognize a general named entity, or it can even recognize locations, names,
+# NLP can either recognize a general named entity, or it can even recognize locations, names,
 # monetary amounts, dates, and more.
 
 # part of speech tagging
