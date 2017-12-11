@@ -155,14 +155,15 @@ def evaluate_forecasts(test, forecasts, n_lag, n_seq, sensor_name):
 
 
 # plot the forecasts in the context of the original dataset
-def plot_forecasts(series, forecasts, n_test, sensor_name, time, n_seq):
+def plot_forecasts(series, forecasts, n_test, file_name, sensor_name, time, n_seq):
 
-    plot_one_line = 0
+    plot_one_line = 1
+    fontsize = 12
 
     # plot the entire dataset in blue
     fig = pyplot.figure()
     forecasts = np.array(forecasts)
-    pyplot.plot(time, series.values)
+    pyplot.plot(time, series.values, label = 'Actual data')
     # only plot the last forecast value
     X = []
     for i in range(1,forecasts.shape[1]+1):
@@ -174,21 +175,30 @@ def plot_forecasts(series, forecasts, n_test, sensor_name, time, n_seq):
     Y = np.array(forecasts)
     for i in range(0,Y.shape[1]):
         index = X[i]
-        pyplot.plot(time[index[0]:index[len(index)-1]+1],Y[:,i])
+        pyplot.plot(time[index[0]:index[len(index)-1]+1],Y[:,i], label = 'Prediction: t+' + str(i+1))
         if plot_one_line == 1:
             break
+    pyplot.title(file_name,fontsize=fontsize)
+    pyplot.legend(fontsize = fontsize)
+    pyplot.xlabel('Time',fontsize=fontsize)
+    pyplot.ylabel(units[sensor_name],fontsize=fontsize)
 
-    ## plot zoomed in figure
+
+    # plot zoomed in figure
     fig_zoomed = pyplot.figure()
     # plot original data
     start = X[0][0] - 1
     end = len(series)
-    pyplot.plot(time[start:end],series[start:end])
+    pyplot.plot(time[start:end],series[start:end], label = 'Actual data')
     for i in range(0,Y.shape[1]):
         index = X[i]
-        pyplot.plot(time[index[0]:index[len(index)-1]+1],Y[:,i])
+        pyplot.plot(time[index[0]:index[len(index)-1]+1],Y[:,i], label = 'Prediction: t+' + str(i+1))
         if plot_one_line == 1:
             break
+    pyplot.title(file_name, fontsize=fontsize)
+    pyplot.legend(fontsize=fontsize)
+    pyplot.xlabel('Time', fontsize=fontsize)
+    pyplot.ylabel(units[sensor_name], fontsize=fontsize)
 
     # show the plot
     fig.show()
@@ -196,9 +206,9 @@ def plot_forecasts(series, forecasts, n_test, sensor_name, time, n_seq):
 
     if SAVE_INFO:
         fig.set_size_inches(18.5, 10.5)
-        fig.savefig(path + sensor_name + '.png', bbox_inches='tight', dpi=200)
+        fig.savefig(PATH + file_name + '.png', bbox_inches='tight', dpi=200)
         fig_zoomed.set_size_inches(18.5, 10.5)
-        fig_zoomed.savefig(path + sensor_name + '-zoomed.png', bbox_inches='tight', dpi=200)
+        fig_zoomed.savefig(PATH + file_name + '-zoomed.png', bbox_inches='tight', dpi=200)
 
     pyplot.close(fig)
     pyplot.close(fig_zoomed)
@@ -217,17 +227,18 @@ def get_files(file_dir):
             dataset_path.append(os.path.join(root,file))
     return dataset_path
 
-def run_train():
-    file_path = './dataset/sample_1_day/OIL_RETURN_TEMPERATURE.csv'
-    sensor_name = 'OIL_RETURN_TEMPERATURE-sample_1_day'
+def run_train(n_lag, n_seq, n_epochs, n_batch, n_neurons, dataset_path):
+    path = dataset_path.split('.')[-2]
+    sensor_name = path.split('/')[-1]
+    file_name = path.split('/')[-1] + '-' + path.split('/')[-2]
 
-    print('processing the dataset of ', sensor_name)
+    print('processing the dataset of ', file_name)
     if SAVE_INFO:
-        logs.write(sensor_name + '\n')
+        logs.write(file_name + '\n')
 
 
     # load dataset
-    series = read_csv(file_path, sep=',')
+    series = read_csv(dataset_path, sep=',')
     header = list(series.columns.values)
 
     raw_time = series[header[0]]
@@ -242,20 +253,17 @@ def run_train():
     series_values = Series(raw_values)
 
     # configure
-    n_lag = 1
-    n_seq = 12  # forecast the next n_seq
     n_test = int(0.2 * series.shape[0])
-    # n_epochs = 1500
-    n_epochs = 1
-    n_batch = 1
-    n_neurons = 1
 
     # prepare data
     scaler, train, test = prepare_data(series_values, n_test, n_lag, n_seq)
     # fit model
     model = fit_lstm(train, n_lag, n_seq, n_batch, n_epochs, n_neurons)
-    # save model
-    model.save('model_01.h5')
+    if SAVE_INFO == 1:
+        # save model
+        model_name = 'model_'+ file_name + '-' + 'seq_' + str(n_seq) +'.h5'
+        model.save(PATH + model_name)
+
     # make forecasts
     forecasts = make_forecasts(model, n_batch, test, n_lag, n_seq)
     # inverse transform forecasts and test
@@ -263,78 +271,39 @@ def run_train():
     actual = [row[n_lag:] for row in test]
     actual = inverse_transform(series_values, actual, scaler, n_test + n_seq - 1)
     # evaluate forecasts
-    evaluate_forecasts(actual, forecasts, n_lag, n_seq, sensor_name)
+    evaluate_forecasts(actual, forecasts, n_lag, n_seq, file_name)
     # plot forecasts
-    plot_forecasts(series_values, forecasts, n_test, sensor_name, raw_datetime, n_seq)
-
-def run_test():
-    model = load_model('model_01.h5')
-    file_path = './dataset/sample_1_day/OIL_RETURN_TEMPERATURE.csv'
-    sensor_name = 'OIL_RETURN_TEMPERATURE-sample_1_day'
-
-    print('processing the dataset of ', sensor_name)
-    if SAVE_INFO:
-        logs.write(sensor_name + '\n')
-
-    # load dataset
-    series = read_csv(file_path, sep=',')
-    header = list(series.columns.values)
-
-    raw_time = series[header[0]]
-    raw_values = series[header[1]]
-
-    raw_time = raw_time.values
-    raw_datetime = [datetime.datetime.strptime(
-        i, "%d-%b-%Y %H:%M:%S") for i in raw_time]
-    raw_values = raw_values.values
-
-    series_time = Series(raw_time)
-    series_values = Series(raw_values)
-
-    # configure
-    n_lag = 1
-    n_seq = 12  # forecast the next n_seq
-    n_test = int(0.2 * series.shape[0])
-    # n_epochs = 1500
-    n_epochs = 1
-    n_batch = 1
-    n_neurons = 1
-    # prepare data
-    scaler, train, test = prepare_data(series_values, n_test, n_lag, n_seq)
-    # make forecasts
-    forecasts = make_forecasts(model, n_batch, test, n_lag, n_seq)
-    # inverse transform forecasts and test
-    forecasts = inverse_transform(series_values, forecasts, scaler, n_test + n_seq - 1)
-    actual = [row[n_lag:] for row in test]
-    actual = inverse_transform(series_values, actual, scaler, n_test + n_seq - 1)
-    # evaluate forecasts
-    evaluate_forecasts(actual, forecasts, n_lag, n_seq, sensor_name)
-    # plot forecasts
-    plot_forecasts(series_values, forecasts, n_test, sensor_name, raw_datetime, n_seq)
+    plot_forecasts(series_values, forecasts, n_test, file_name, sensor_name, raw_datetime, n_seq)
 
 
+SAVE_INFO = 1       # 1: save information in file, 0: do not save
+RUN_ON_LOCAL = 1    # 1: run on local, 0: run on server
+TRAIN = 1           # 1: train model, 0: load model
 
-
-SAVE_INFO = 0
-RUN_ON_LOCAL = 1
-TRAIN = 0
-
-path = ''
+n_lag = 1
+n_seq = 4  # forecast the next n_seq
+n_epochs = 1500
+n_batch = 1
+n_neurons = 1
+dataset_path = './dataset/sample_6_hour/OIL_RETURN_TEMPERATURE.csv'
+# sensor units
+units = {'MAIN_FILTER_IN_PRESSURE':'PSI','MAIN_FILTER_OIL_TEMP':'Fahrenheit',
+         'MAIN_FILTER_OUT_PRESSURE':'PSI','OIL_RETURN_TEMPERATURE':'Fahrenheit',
+         'TANK_FILTER_IN_PRESSURE':'PSI','TANK_FILTER_OUT_PRESSURE':'PSI',
+         'TANK_LEVEL':'Inch','TANK_TEMPERATURE':'Fahrenheit','FT-202B':'Mils',
+         'FT-204B':'Mils','PT-203':'Mils','PT-204.HS':'Mils'}
 
 if RUN_ON_LOCAL:
-    path = '/home/bc/Documents/USS/compare/'
+    PATH = '/home/bc/Documents/USS/compare/'
 else:
-    path = '/home/PNW/wu1114/Documents/USS/compare/'
+    PATH = '/home/PNW/wu1114/Documents/USS/compare/'
 
 if SAVE_INFO:
-    with open(path+'logs.txt','w') as logs:
-        with open(path+'data.pkl','wb') as pkl:
+    with open(PATH+'logs.txt','w') as logs:
+        with open(PATH+'data.pkl','wb') as pkl:
             if TRAIN:
-                run_train()
-            else:
-                run_test()
+                run_train(n_lag, n_seq, n_epochs, n_batch, n_neurons, dataset_path)
+
 else:
     if TRAIN:
-        run_train()
-    else:
-        run_test()
+        run_train(n_lag, n_seq, n_epochs, n_batch, n_neurons, dataset_path)
