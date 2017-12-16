@@ -1,14 +1,15 @@
 from RNN.time_series_prediction.Sensor import *
 
-
+# configuration
 save_info = 1       # 1: save information in file, 0: do not save
 run_on_local = 1    # 1: run on local, 0: run on server
-train = 1           # 1: train model, 0: load model
+train = 0           # 1: train model, 0: load model
 
 n_lag = 1
-n_epochs = 1500
+n_epochs = 1
 dataset_path = './dataset/'
 root_path = '/home/bc/Documents/USS/compare/'
+# root_path = '/root/USS/compare/'
 
 sensor_names = {
     'MAIN_FILTER_IN_PRESSURE','MAIN_FILTER_OIL_TEMP','MAIN_FILTER_OUT_PRESSURE','OIL_RETURN_TEMPERATURE',
@@ -25,5 +26,9 @@ for name in sensor_names:
         sample_rate = j
         for s in n_seqs:
             s = Sensor(n_seq = s, n_epochs= n_epochs, dataset_path = dataset_path, sensor_name = name,
-                       sample_rate = sample_rate, root_path = root_path, save_info = 1)
-            s.run_train()
+                       sample_rate = sample_rate, train = train, root_path = root_path, save_info = 1)
+            if train == 1:
+                s.run_train()   # train the network
+            else:
+                s.load_model_and_predict()  # load .h5 file and make prediction
+

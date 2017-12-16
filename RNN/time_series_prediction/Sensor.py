@@ -14,6 +14,7 @@ from math import sqrt
 from matplotlib import pyplot
 from numpy import array
 import datetime
+from matplotlib.dates import DateFormatter
 import numpy as np
 import os
 import pickle
@@ -188,27 +189,30 @@ class Sensor:
             predicted = [forecast[i] for forecast in forecasts]
             rmse = sqrt(mean_squared_error(actual, predicted))
             rmse_percent = rmse / np.mean(actual)
-            if self.save_info:
+            if self.save_info & self.train:
                 # save data to pickle
                 pickle.dump(actual, self.pkl)
                 pickle.dump(predicted, self.pkl)
             print('t+%d RMSE: %f, error percent: %f%%' % ((i + 1), rmse, rmse_percent * 100))
 
-            if self.save_info:
+            if self.save_info & self.train:
                 self.logs.write('t+%d RMSE: %f, error percent: %f%%\n' % ((i + 1), rmse, rmse_percent * 100))
 
     # plot the forecasts in the context of the original dataset
     def plot_forecasts(self, series, forecasts, n_test, file_name, sensor_name, time, n_seq):
 
         plot_one_line = 1
-        fontsize = 20
-        linewidth = 2
+        label_fontsize = 35
+        axis_fontsize = 30
+        linewidth = 5
 
         # plot the entire dataset in blue
         fig = pyplot.figure()
+        ax1 = fig.add_subplot(1, 1, 1)
+        ax1.xaxis.set_major_formatter(DateFormatter('%m-%d'))
         forecasts = np.array(forecasts)
         pyplot.plot(time, series.values, label='Actual data', linewidth=linewidth)
-        # only plot the last forecast value
+        ####################### plot the forecast value #########################
         X = []
         for i in range(1, forecasts.shape[1] + 1):
             off_s = len(series) - n_test + i - n_seq
@@ -221,13 +225,17 @@ class Sensor:
             pyplot.plot(time[index[0]:index[len(index) - 1] + 1], Y[:, i], label='Prediction: t+' + str(i + 1), linewidth=linewidth)
             if plot_one_line == 1:
                 break
-        pyplot.title(file_name, fontsize=fontsize)
-        pyplot.legend(fontsize=fontsize)
-        pyplot.xlabel('Time', fontsize=fontsize)
-        pyplot.ylabel(self.units[sensor_name], fontsize=fontsize)
+        pyplot.title(file_name, fontsize=label_fontsize)
+        pyplot.legend(fontsize=label_fontsize)
+        pyplot.xlabel('Time', fontsize=label_fontsize)
+        pyplot.ylabel(self.units[sensor_name], fontsize=label_fontsize)
+        pyplot.xticks(fontsize=axis_fontsize)
+        pyplot.yticks(fontsize=axis_fontsize)
 
-        # plot zoomed in figure
+        ######################### plot zoomed in figure ########################
         fig_zoomed = pyplot.figure()
+        ax2 = fig_zoomed.add_subplot(1, 1, 1)
+        ax2.xaxis.set_major_formatter(DateFormatter('%m-%d'))
         # plot original data
         start = X[0][0] - 1
         end = len(series)
@@ -237,11 +245,12 @@ class Sensor:
             pyplot.plot(time[index[0]:index[len(index) - 1] + 1], Y[:, i], label='Prediction: t+' + str(i + 1), linewidth=linewidth)
             if plot_one_line == 1:
                 break
-        pyplot.title(file_name, fontsize=fontsize)
-        pyplot.legend(fontsize=fontsize)
-        pyplot.xlabel('Time', fontsize=fontsize)
-        pyplot.ylabel(self.units[sensor_name], fontsize=fontsize)
-
+        pyplot.title(file_name, fontsize=label_fontsize)
+        pyplot.legend(fontsize=label_fontsize)
+        pyplot.xlabel('Time', fontsize=label_fontsize)
+        pyplot.ylabel(self.units[sensor_name], fontsize=label_fontsize)
+        pyplot.xticks(fontsize=axis_fontsize)
+        pyplot.yticks(fontsize=axis_fontsize)
         # show the plot
         fig.show()
         fig_zoomed.show()
@@ -254,6 +263,22 @@ class Sensor:
 
         pyplot.close(fig)
         pyplot.close(fig_zoomed)
+
+    def load_dataset(self):
+        series = read_csv(self.dataset_path, sep=',')
+        header = list(series.columns.values)
+
+        raw_time = series[header[0]]
+        raw_values = series[header[1]]
+
+        raw_time = raw_time.values
+        raw_datetime = [datetime.datetime.strptime(
+            i, "%d-%b-%Y %H:%M:%S") for i in raw_time]
+        raw_values = raw_values.values
+
+        series_time = Series(raw_time)
+        series_values = Series(raw_values)
+        return series, series_values, raw_datetime
 
     def open_file(self):
 
@@ -275,7 +300,7 @@ class Sensor:
             print('close file error!')
 
     def run_train(self):
-        # create log files
+        # create logs files
         self.open_file()
 
         print('processing the dataset of ', self.file_name)
@@ -283,20 +308,20 @@ class Sensor:
             self.logs.write(self.file_name + '\n')
 
         # load dataset
-        series = read_csv(self.dataset_path, sep=',')
-        header = list(series.columns.values)
-
-        raw_time = series[header[0]]
-        raw_values = series[header[1]]
-
-        raw_time = raw_time.values
-        raw_datetime = [datetime.datetime.strptime(
-            i, "%d-%b-%Y %H:%M:%S") for i in raw_time]
-        raw_values = raw_values.values
-
-        series_time = Series(raw_time)
-        series_values = Series(raw_values)
-
+        # series = read_csv(self.dataset_path, sep=',')
+        # header = list(series.columns.values)
+        #
+        # raw_time = series[header[0]]
+        # raw_values = series[header[1]]
+        #
+        # raw_time = raw_time.values
+        # raw_datetime = [datetime.datetime.strptime(
+        #     i, "%d-%b-%Y %H:%M:%S") for i in raw_time]
+        # raw_values = raw_values.values
+        #
+        # series_time = Series(raw_time)
+        # series_values = Series(raw_values)
+        series, series_values, raw_datetime = self.load_dataset()
         # configure
         n_test = int(0.2 * series.shape[0])
 
@@ -309,7 +334,7 @@ class Sensor:
             model_name = 'model_' + self.file_name + '-' + 'seq_' + str(self.n_seq) + '.h5'
             model.save(self.root_path + model_name)
 
-        # make forecasts
+        # make prediction
         forecasts = self.make_forecasts(model, self.n_batch, test, self.n_lag, self.n_seq)
         # inverse transform forecasts and test
         forecasts = self.inverse_transform(series_values, forecasts, scaler, n_test + self.n_seq - 1)
@@ -321,3 +346,22 @@ class Sensor:
         self.plot_forecasts(series_values, forecasts, n_test, self.file_name, self.sensor_name, raw_datetime, self.n_seq)
         # close file
         self.close_file()
+
+    def load_model_and_predict(self):
+        # load model
+        print('loading model ' + self.file_name + '.h5...')
+        model = load_model(self.root_path + 'model_' + self.file_name + '-' + 'seq_' + str(self.n_seq) + '.h5')
+        # load dataset
+        series, series_values, raw_datetime = self.load_dataset()
+        n_test = int(0.2 * series.shape[0])
+        scaler, train, test = self.prepare_data(series_values, n_test, self.n_lag, self.n_seq)
+        # make a prediction
+        forecasts = self.make_forecasts(model, self.n_batch, test, self.n_lag, self.n_seq)
+        # inverse transform forecasts and test
+        forecasts = self.inverse_transform(series_values, forecasts, scaler, n_test + self.n_seq - 1)
+        actual = [row[self.n_lag:] for row in test]
+        actual = self.inverse_transform(series_values, actual, scaler, n_test + self.n_seq - 1)
+        # evaluate forecasts
+        self.evaluate_forecasts(actual, forecasts, self.n_lag, self.n_seq, self.file_name)
+        # plot forecasts
+        self.plot_forecasts(series_values, forecasts, n_test, self.file_name, self.sensor_name, raw_datetime, self.n_seq)
