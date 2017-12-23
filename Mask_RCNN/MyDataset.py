@@ -3,9 +3,10 @@ import random
 
 import cv2
 import numpy as np
-from test.utils.config import Config
-from test.utils.utils import *
-from test.utils.visualize import *
+from Mask_RCNN.utils import *
+from Mask_RCNN.visualize import *
+
+from Mask_RCNN.config import Config
 
 
 class MyConfig(Config):
@@ -176,7 +177,7 @@ config = MyConfig()
 config.display()
 # generate dataset
 dataset_train = MyDataset()
-dataset_train.load_shapes(500, config.IMAGE_SHAPE[0], config.IMAGE_SHAPE[1])
+dataset_train.load_shapes(5, config.IMAGE_SHAPE[0], config.IMAGE_SHAPE[1])
 dataset_train.prepare()
 
 # Load and display random samples
@@ -185,3 +186,7 @@ for image_id in image_ids:
     image = dataset_train.load_image(image_id)
     mask, class_ids = dataset_train.load_mask(image_id)
     display_top_masks(image, mask, class_ids, dataset_train.class_names)
+
+# Create model in training mode
+model = modellib.MaskRCNN(mode="training", config=config,
+                          model_dir=MODEL_DIR)

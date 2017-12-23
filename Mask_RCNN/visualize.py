@@ -18,7 +18,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Polygon
 from skimage.measure import find_contours
-from test.utils.utils import *
 
 
 ############################################################
