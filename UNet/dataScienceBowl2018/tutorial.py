@@ -42,8 +42,14 @@ IMG_WIDTH = 256
 IMG_HEIGHT = 256
 IMG_CHANNELS = 3  # training set has 4 channels, but testing set only has 3 channels
 BATCH_SIZE = 16
-TRAIN_PATH = '/root/dataset/dataScienceBowl2018/stage1_train/'
-TEST_PATH = '/root/dataset/dataScienceBowl2018/stage1_test/'
+train_on_local = False
+if train_on_local:
+    TRAIN_PATH = '/root/dataset/dataScienceBowl2018/stage1_train/'
+    TEST_PATH = '/root/dataset/dataScienceBowl2018/stage1_test/'
+else:
+    TRAIN_PATH = '/home/PNW/wu1114/Documents/dataset/dataScienceBowl2018/stage1_train/'
+    TEST_PATH = '/home/PNW/wu1114/Documents/dataset/dataScienceBowl2018/stage1_test/'
+
 
 warnings.filterwarnings('ignore', category=UserWarning, module='skimage')
 seed = 42
@@ -110,17 +116,6 @@ def prepare_data(TRAIN_PATH, TEST_PATH):
 X_train, Y_train, X_test, sizes_test, train_ids, test_ids = prepare_data(TRAIN_PATH, TEST_PATH)
 
 
-# In[5]:
-
-print('X_train.shape: ' + str(X_train.shape))
-print('Y_train.shape: ' + str(Y_train.shape))
-print('X_test.shape: ' + str(X_test.shape))
-print('length of sizes_test: ' + str(len(sizes_test)))
-print(sizes_test[15])
-
-
-# In[6]:
-
 def get_contour(X, Y):
     '''
     :param images: images, ndarray, e.g.(500,256,256,3)
@@ -146,51 +141,6 @@ def get_contour(X, Y):
     return contour_images, contour_labels, contours
 
 
-# In[7]:
-
-X_train_contour, Y_train_contour, contour = get_contour(X_train, Y_train)
-
-
-# In[8]:
-
-# visualize data
-def plot_train(X_train, Y_train, index = -1):
-    if index == -1:
-        index = np.random.randint(images.shape[0])
-    image = X_train[index]
-    label = Y_train[index]
-    print('X_train(index = ' + str(index) + '):')
-    plt.imshow(np.squeeze(image))
-    plt.show()
-    print('Y_train(index = ' + str(index) + '):')
-    plt.imshow(np.squeeze(label), cmap ='gray')
-    plt.show()
-def plot_contour(X_train_contour, Y_train_contour, contour, index = -1):
-    if index == -1:
-        index = np.random.randint(images.shape[0])
-    print('contour(index = ' + str(index) + '):')
-    plt.imshow(np.squeeze(contour[index]), cmap ='gray')
-    plt.show()
-    print('X_train_contour(index = ' + str(index) + '):')
-    plt.imshow(np.squeeze(X_train_contour[index]))
-    plt.show()
-    print('Y_train_contour(index = ' + str(index) + '):')
-    plt.imshow(np.squeeze(Y_train_contour[index]), cmap ='gray')
-    plt.show()
-
-
-# In[9]:
-
-idx = [idx for idx, train_id in enumerate(train_ids) if train_id == 'a102535b0e88374bea4a1cfd9ee7cb3822ff54f4ab2a9845d428ec22f9ee2288']
-plot_train(X_train, Y_train, 641)
-
-
-# In[10]:
-
-plot_contour(X_train_contour, Y_train_contour, contour, index = 641)
-
-
-# In[13]:
 
 # data augmentation
 def generator(xtr, xval, ytr, yval, batch_size):
@@ -227,25 +177,8 @@ def generator(xtr, xval, ytr, yval, batch_size):
 
 # In[14]:
 
-BATCH_SIZE = 16
 xtr, xval, ytr, yval = train_test_split(X_train, Y_train, test_size=0.1, random_state=7)
 train_generator, val_generator = generator(xtr, xval, ytr, yval, BATCH_SIZE)
-print(train_generator)
-
-
-# In[22]:
-
-for a,b in train_generator:
-    print(a.shape)
-    print(b.shape)
-    plt.imshow(a[0])
-    plt.show()
-    plt.imshow(np.squeeze(b[0]))
-    plt.show()
-    break
-
-
-# In[23]:
 
 def mean_iou(y_true, y_pred):
     score, up_opt = tf.metrics.mean_iou(y_true, y_pred, 2)
@@ -347,9 +280,6 @@ for i in range(len(preds_test)):
                                        (sizes_test[i][0], sizes_test[i][1]), 
                                        mode='constant', preserve_range=True))
 
-
-# In[145]:
-
 # plot prediction
 def plot_prediction(preds, preds_t, X, Y, index = -1):
     if index == -1:
@@ -371,38 +301,6 @@ def plot_prediction(preds, preds_t, X, Y, index = -1):
     plt.imshow(np.squeeze(preds_t[index]), cmap = 'gray')
     plt.show()
 
-
-# In[146]:
-
-# plot prediction on training set
-plot_prediction(preds = preds_train, preds_t = preds_train_t, X = X_train, Y = Y_train)
-
-
-# In[147]:
-
-# plot prediction on testing set
-plot_prediction(preds = preds_test, preds_t = preds_test_t, X = X_test, Y = None)
-
-
-# In[148]:
-
-# plot prediction on testing set
-index = np.random.randint(X_test.shape[0])
-print('X_test(index = ' + str(index) + '):')
-# print(np.squeeze(X_test[index]))
-plt.imshow(np.squeeze(X_test[index]))
-plt.show()
-print('prediction on testing: ')
-# print(np.squeeze(preds_test[index]))
-plt.imshow(np.squeeze(preds_test[index]), cmap = 'gray')
-plt.show()
-print('prediction on testing (threshold>0.5): ')
-# print(np.squeeze(preds_test_t[index]))
-plt.imshow(np.squeeze(preds_test_t[index]), cmap = 'gray')
-plt.show()
-
-
-# In[44]:
 
 # Run-length encoding stolen from https://www.kaggle.com/rakhlin/fast-run-length-encoding-python
 def rle_encoding(x):
@@ -437,7 +335,7 @@ for n, id_ in enumerate(test_ids):
 sub = pd.DataFrame()
 sub['ImageId'] = new_test_ids
 sub['EncodedPixels'] = pd.Series(rles).apply(lambda x: ' '.join(str(y) for y in x))
-sub.to_csv('sub-dsbowl2018-1.csv', index=False)
+sub.to_csv('sub-dsbowl2018-3.csv', index=False)
 
 
 # In[ ]:
