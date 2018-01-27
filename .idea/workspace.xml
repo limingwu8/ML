@@ -1,0 +1,1342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list id="0b8f223b-63d5-4275-a2eb-c5daaa661387" name="configuration" comment="" />
+    <list default="true" id="ac03b285-c43f-44c7-a614-2f822410b2ba" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/CIFAR10/logs/events.out.tfevents.1510963777.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/CIFAR10/logs/model.ckpt-0.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/CIFAR10/logs/model.ckpt-0.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/CIFAR10/logs/model.ckpt-0.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/CIFAR10/logs/model.ckpt-99.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/CIFAR10/logs/model.ckpt-99.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/CIFAR10/logs/model.ckpt-99.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/MNIST/data/processed/test.pt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/MNIST/data/processed/training.pt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/MNIST/data/raw/t10k-images-idx3-ubyte" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/MNIST/data/raw/t10k-labels-idx1-ubyte" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/MNIST/data/raw/train-images-idx3-ubyte" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/MNIST/data/raw/train-labels-idx1-ubyte" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/MNIST/logs/train/events.out.tfevents.1513429266.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/MNIST/logs/train/events.out.tfevents.1516638459.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/events.out.tfevents.1509455730.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/events.out.tfevents.1509455782.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-8000.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-8000.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-8000.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-8500.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-8500.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-8500.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-9000.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-9000.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-9000.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-9500.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-9500.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-9500.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-9999.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-9999.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/model.ckpt-9999.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/val/events.out.tfevents.1509455730.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/val/events.out.tfevents.1509455783.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/dataScienceBowl2018/data.pkl" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/dataScienceBowl2018/model-dsbowl2018(1epoch).h5" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/dataScienceBowl2018/model-dsbowl2018-1.h5" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/dataScienceBowl2018/model-dsbowl2018-1epoch-remote.h5" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/dataScienceBowl2018/model-dsbowl2018-30epoch-local-02.h5" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/dataScienceBowl2018/model-dsbowl2018-30epoch-local.h5" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/dataScienceBowl2018/size_test.pkl" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/events.out.tfevents.1513431985.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-0.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-0.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-0.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-10000.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-10000.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-10000.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-12000.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-12000.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-12000.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-14000.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-14000.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-14000.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-14999.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-14999.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-14999.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-2000.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-2000.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-2000.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-4000.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-4000.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-4000.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-6000.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-6000.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-6000.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-8000.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-8000.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/model.ckpt-8000.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/val/events.out.tfevents.1513431986.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/vgg16_pretrain/vgg16.npy" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1508339128.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1508894148.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1508894173.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1508894175.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1508894262.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1508894544.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1508894616.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1508894617.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1508894868.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1508895948.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1508896149.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1508896650.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1508897050.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1509378839.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1509380058.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1509380557.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1509381316.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1509381869.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1509382494.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1509388403.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1509388658.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1509388741.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1509392002.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1509392069.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1509392690.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/events.out.tfevents.1509392891.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/model.ckpt-0.data-00000-of-00001" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/model.ckpt-0.index" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/model.ckpt-0.meta" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/val/events.out.tfevents.1508895948.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/val/events.out.tfevents.1508896157.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/val/events.out.tfevents.1508896650.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/val/events.out.tfevents.1509382495.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/val/events.out.tfevents.1509388411.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/val/events.out.tfevents.1509388658.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/val/events.out.tfevents.1509388745.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/val/events.out.tfevents.1509392019.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/val/events.out.tfevents.1509392072.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/val/events.out.tfevents.1509392692.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/val/events.out.tfevents.1509392897.liming-N56VV" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/CIFAR10/logs/checkpoint" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/MNIST/mnist1.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CNN/MNIST/mnist_pytorch.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Data_Science_Bowl/DICOM/.ipynb_checkpoints/Untitled-checkpoint.ipynb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Data_Science_Bowl/DICOM/.ipynb_checkpoints/read_dicom-checkpoint.ipynb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Data_Science_Bowl/DICOM/.ipynb_checkpoints/sunnyBrook_dataset-checkpoint.ipynb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Data_Science_Bowl/DICOM/Untitled.ipynb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Data_Science_Bowl/DICOM/sunnyBrook_dataset.ipynb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Inception-v3/image_processing.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PKLot/logs/train/checkpoint" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Torch/demo01.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Torch/demo02.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Torch/demo03.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Torch/demo04.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Torch/demo05.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/dataScienceBowl2018/.ipynb_checkpoints/Untitled-checkpoint.ipynb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/dataScienceBowl2018/.ipynb_checkpoints/tutorial-checkpoint.ipynb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/dataScienceBowl2018/.ipynb_checkpoints/utils-checkpoint.ipynb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/dataScienceBowl2018/run-length-decoding.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/dataScienceBowl2018/run-length-encoding.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/dataScienceBowl2018/sub-dsbowl2018-4.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/data_preprocess/data_preprocess.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UNet/data_preprocess/read_file_test.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VGG-Tensorflow/logs/train/checkpoint" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dogs_vs_cats/logs/train/checkpoint" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/timeseries-Tensorflow/examples/OIL_RETURN_TEMPERATURE.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/timeseries-Tensorflow/examples/plot-timeseries.py" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="ML" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="mnist_pytorch.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/CNN/MNIST/mnist_pytorch.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="696">
+              <caret line="66" column="22" lean-forward="false" selection-start-line="66" selection-start-column="22" selection-end-line="66" selection-end-column="22" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mnist1.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CNN/MNIST/mnist1.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="216">
+              <caret line="36" column="2" lean-forward="false" selection-start-line="36" selection-start-column="2" selection-end-line="36" selection-end-column="2" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="module.py" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/torch/nn/modules/module.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="701">
+              <caret line="221" column="0" lean-forward="false" selection-start-line="221" selection-start-column="0" selection-end-line="221" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/PKLot2/train.py" />
+        <option value="$PROJECT_DIR$/CNN/CIFAR10/cifar10_model.py" />
+        <option value="$PROJECT_DIR$/CNN/CIFAR10/cifar10.py" />
+        <option value="$PROJECT_DIR$/CNN/CIFAR10/cifar10_input.py" />
+        <option value="$PROJECT_DIR$/test/python/Dataset.py" />
+        <option value="$PROJECT_DIR$/test/python/MyDataset.py" />
+        <option value="$PROJECT_DIR$/test/utils/utils.py" />
+        <option value="$PROJECT_DIR$/test/utils/config.py" />
+        <option value="$PROJECT_DIR$/test/utils/visualize.py" />
+        <option value="$PROJECT_DIR$/test/utils/MyDataset.py" />
+        <option value="$PROJECT_DIR$/VGG-Tensorflow/input_file.py" />
+        <option value="$PROJECT_DIR$/VGG-Tensorflow/tools.py" />
+        <option value="$PROJECT_DIR$/PKLot/model.py" />
+        <option value="$PROJECT_DIR$/VGG-Tensorflow/logs/tool_variable_name.py" />
+        <option value="$PROJECT_DIR$/VGG-Tensorflow/VGG.py" />
+        <option value="$PROJECT_DIR$/test/python/numpy_save.py" />
+        <option value="$PROJECT_DIR$/VGG-Tensorflow/utils.py" />
+        <option value="$PROJECT_DIR$/RNN/time_series_prediction/Sensor.py" />
+        <option value="$PROJECT_DIR$/RNN/time_series_prediction/train_batch.py" />
+        <option value="$PROJECT_DIR$/CNN/MNIST/mnist_tensorflow.py" />
+        <option value="$PROJECT_DIR$/VGG-Tensorflow/train_and_val.py" />
+        <option value="$PROJECT_DIR$/Mask-R-CNN/utils/MyDataset.py" />
+        <option value="$PROJECT_DIR$/Mask_RCNN/utils/visualize.py" />
+        <option value="$PROJECT_DIR$/Mask_RCNN/utils/utils.py" />
+        <option value="$PROJECT_DIR$/Mask_RCNN/utils/MyDataset.py" />
+        <option value="$PROJECT_DIR$/Mask_RCNN/MyDataset.py" />
+        <option value="$PROJECT_DIR$/Mask_RCNN/demo.py" />
+        <option value="$PROJECT_DIR$/Mask_RCNN/model.py" />
+        <option value="$PROJECT_DIR$/Mask_RCNN/train_shapes.py" />
+        <option value="$PROJECT_DIR$/Data_Science_Bowl/DICOM/sunnyBrook_dataset.ipynb" />
+        <option value="$PROJECT_DIR$/timeseries-Tensorflow/examples/plot-timeseries.py" />
+        <option value="$PROJECT_DIR$/UNet/tf_unet/test.py" />
+        <option value="$PROJECT_DIR$/PKLot/input_data.py" />
+        <option value="$PROJECT_DIR$/UNet/data_preprocess/data_preprocess.py" />
+        <option value="$PROJECT_DIR$/UNet/data_preprocess/.ipynb_checkpoints/read_file_test.py" />
+        <option value="$PROJECT_DIR$/UNet/data_preprocess/utils.py" />
+        <option value="$PROJECT_DIR$/UNet/data_preprocess/read_file_test.py" />
+        <option value="$PROJECT_DIR$/UNet/dataScienceBowl2018/tutorial.ipynb" />
+        <option value="$PROJECT_DIR$/UNet/dataScienceBowl2018/tutorial.py" />
+        <option value="$PROJECT_DIR$/Torch/torch_tensors.py" />
+        <option value="$PROJECT_DIR$/Torch/demo02.py" />
+        <option value="$PROJECT_DIR$/Torch/demo03.py" />
+        <option value="$PROJECT_DIR$/Torch/demo04.py" />
+        <option value="$PROJECT_DIR$/Torch/demo05.py" />
+        <option value="$PROJECT_DIR$/UNet/dataScienceBowl2018/rles2imgs.py" />
+        <option value="$PROJECT_DIR$/UNet/dataScienceBowl2018/run-length-encoding.py" />
+        <option value="$PROJECT_DIR$/UNet/dataScienceBowl2018/run-length-decoding.py" />
+        <option value="$PROJECT_DIR$/Torch/aaa.py" />
+        <option value="$PROJECT_DIR$/CNN/MNIST/mnist_pytorch2.py" />
+        <option value="$PROJECT_DIR$/CNN/MNIST/mnist_pytorch.py" />
+        <option value="$PROJECT_DIR$/CNN/MNIST/mnist1.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="97" />
+    <option name="y" value="-4" />
+    <option name="width" value="1841" />
+    <option name="height" value="1052" />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="ML" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ML" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ML" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ML" type="462c0819:PsiDirectoryNode" />
+              <item name="CNN" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ML" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ML" type="462c0819:PsiDirectoryNode" />
+              <item name="CNN" type="462c0819:PsiDirectoryNode" />
+              <item name="MNIST" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ML" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ML" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ML" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ML" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="python" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ML" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ML" type="462c0819:PsiDirectoryNode" />
+              <item name="Torch" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ML" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ML" type="462c0819:PsiDirectoryNode" />
+              <item name="UNet" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ML" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ML" type="462c0819:PsiDirectoryNode" />
+              <item name="UNet" type="462c0819:PsiDirectoryNode" />
+              <item name="dataScienceBowl2018" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///root/PycharmProjects/ML/CNN/MNIST/mnist1.py" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Python.mnist1">
+    <configuration name="aaa" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Torch" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="ML" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Torch/aaa.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="demo04" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Torch" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="ML" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Torch/demo04.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="mnist1" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/CNN/MNIST" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="ML" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CNN/MNIST/mnist1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="mnist_pytorch" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/CNN/MNIST" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="ML" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CNN/MNIST/mnist_pytorch.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="mnist_pytorch2" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/CNN/MNIST" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="ML" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CNN/MNIST/mnist_pytorch2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <list size="5">
+      <item index="0" class="java.lang.String" itemvalue="Python.mnist_pytorch" />
+      <item index="1" class="java.lang.String" itemvalue="Python.demo04" />
+      <item index="2" class="java.lang.String" itemvalue="Python.aaa" />
+      <item index="3" class="java.lang.String" itemvalue="Python.mnist_pytorch2" />
+      <item index="4" class="java.lang.String" itemvalue="Python.mnist1" />
+    </list>
+    <recent_temporary>
+      <list size="5">
+        <item index="0" class="java.lang.String" itemvalue="Python.mnist1" />
+        <item index="1" class="java.lang.String" itemvalue="Python.mnist_pytorch" />
+        <item index="2" class="java.lang.String" itemvalue="Python.mnist_pytorch2" />
+        <item index="3" class="java.lang.String" itemvalue="Python.aaa" />
+        <item index="4" class="java.lang.String" itemvalue="Python.demo04" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ac03b285-c43f-44c7-a614-2f822410b2ba" name="Default" comment="" />
+      <changelist id="0b8f223b-63d5-4275-a2eb-c5daaa661387" name="configuration" comment="" />
+      <created>1505761989226</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1505761989226</updated>
+    </task>
+    <task id="LOCAL-00001" summary="cats vs dogs">
+      <created>1508340541319</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1508340541319</updated>
+    </task>
+    <task id="LOCAL-00002" summary="tensorboard logs">
+      <created>1508340564730</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1508340564730</updated>
+    </task>
+    <task id="LOCAL-00003" summary="read data">
+      <created>1508724776114</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1508724776115</updated>
+    </task>
+    <task id="LOCAL-00004" summary="PKLot">
+      <created>1508724835437</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1508724835437</updated>
+    </task>
+    <task id="LOCAL-00005" summary="dogs vs cats">
+      <created>1509194733332</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1509194733332</updated>
+    </task>
+    <task id="LOCAL-00006" summary="dogs vs cats">
+      <created>1509194767020</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1509194767020</updated>
+    </task>
+    <task id="LOCAL-00007" summary="multi-step prediction">
+      <created>1509233841859</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1509233841859</updated>
+    </task>
+    <task id="LOCAL-00008" summary="one step prediction">
+      <created>1509233856741</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1509233856741</updated>
+    </task>
+    <task id="LOCAL-00009" summary="test">
+      <created>1509233884429</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1509233884429</updated>
+    </task>
+    <task id="LOCAL-00010" summary="sensor data">
+      <created>1509233899026</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1509233899026</updated>
+    </task>
+    <task id="LOCAL-00011" summary="prediction results">
+      <created>1509233979999</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1509233979999</updated>
+    </task>
+    <task id="LOCAL-00012" summary="test">
+      <created>1509459500241</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1509459500241</updated>
+    </task>
+    <task id="LOCAL-00013" summary="cats vs dots">
+      <created>1509459517554</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1509459517554</updated>
+    </task>
+    <task id="LOCAL-00014" summary="PKLot">
+      <created>1509459557068</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1509459557068</updated>
+    </task>
+    <task id="LOCAL-00015" summary="CIFAR10">
+      <created>1511754285345</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1511754285345</updated>
+    </task>
+    <task id="LOCAL-00016" summary="NLP">
+      <created>1513011862915</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1513011862915</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Mask-R-CNN">
+      <created>1513012012328</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1513012012329</updated>
+    </task>
+    <task id="LOCAL-00018" summary=".">
+      <created>1513012054111</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1513012054111</updated>
+    </task>
+    <task id="LOCAL-00019" summary="NLP">
+      <created>1513012065014</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1513012065014</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Predictive Maintenance">
+      <created>1513012102314</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1513012102314</updated>
+    </task>
+    <task id="LOCAL-00021" summary=".">
+      <created>1513012144672</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1513012144672</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Mask-R-CNN">
+      <created>1513012158099</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1513012158099</updated>
+    </task>
+    <task id="LOCAL-00023" summary="MINST">
+      <created>1513012169813</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1513012169813</updated>
+    </task>
+    <task id="LOCAL-00024" summary="PKLot">
+      <created>1513012242530</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1513012242530</updated>
+    </task>
+    <task id="LOCAL-00025" summary="VGG">
+      <created>1513434634684</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1513434634684</updated>
+    </task>
+    <task id="LOCAL-00026" summary="test">
+      <created>1513434688007</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1513434688007</updated>
+    </task>
+    <task id="LOCAL-00027" summary="MNIST">
+      <created>1513434795955</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1513434795955</updated>
+    </task>
+    <task id="LOCAL-00028" summary="test">
+      <created>1513434893544</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1513434893544</updated>
+    </task>
+    <task id="LOCAL-00029" summary="time series prediction">
+      <created>1513435187709</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1513435187709</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Mask RCNN">
+      <created>1513435233446</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1513435233446</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Mask RCNN">
+      <created>1514005804614</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1514005804614</updated>
+    </task>
+    <task id="LOCAL-00032" summary="read DICOM data">
+      <created>1514005850289</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1514005850289</updated>
+    </task>
+    <task id="LOCAL-00033" summary="UNet util">
+      <created>1516379478135</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1516379478135</updated>
+    </task>
+    <task id="LOCAL-00034" summary="data science bowl 2018">
+      <created>1516557035680</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1516557035680</updated>
+    </task>
+    <task id="LOCAL-00035" summary="data science bowl 2018">
+      <created>1516587865570</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1516587865570</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Mask RCNN">
+      <created>1516588078664</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1516588078664</updated>
+    </task>
+    <task id="LOCAL-00037" summary="VGG">
+      <created>1516588119281</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1516588119281</updated>
+    </task>
+    <task id="LOCAL-00038" summary="UNet">
+      <created>1516588137154</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1516588137154</updated>
+    </task>
+    <task id="LOCAL-00039" summary="MNIST">
+      <created>1516588969833</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1516588969833</updated>
+    </task>
+    <task id="LOCAL-00040" summary="UNet">
+      <created>1516589045458</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1516589045458</updated>
+    </task>
+    <task id="LOCAL-00041" summary="UNet">
+      <created>1516639900067</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1516639900067</updated>
+    </task>
+    <task id="LOCAL-00042" summary="UNet">
+      <created>1516639999867</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1516639999867</updated>
+    </task>
+    <task id="LOCAL-00043" summary="pytorch">
+      <created>1517024283000</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1517024283000</updated>
+    </task>
+    <task id="LOCAL-00044" summary="MNIST">
+      <created>1517024308551</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1517024308551</updated>
+    </task>
+    <task id="LOCAL-00045" summary="run length encoding and decoding">
+      <created>1517024330953</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1517024330953</updated>
+    </task>
+    <task id="LOCAL-00046" summary="pytorch">
+      <created>1517024351135</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1517024351136</updated>
+    </task>
+    <task id="LOCAL-00047" summary="MNIST">
+      <created>1517024366082</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1517024366082</updated>
+    </task>
+    <task id="LOCAL-00048" summary="data science bowl 2018">
+      <created>1517024388543</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1517024388543</updated>
+    </task>
+    <task id="LOCAL-00049" summary=".">
+      <created>1517026396791</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1517026396791</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="71" y="-4" width="1849" height="1084" extended-state="6" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22282314" sideWeight="0.49591002" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32822084" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.41049215" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16333152" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.49107626" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24986479" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1660357" sideWeight="0.50408995" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3666847" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32990807" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32822084" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+    <layout-to-restore>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32822084" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32924336" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5392104" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2368848" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16333152" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21795565" sideWeight="0.49591002" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32822084" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24986479" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2931314" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1660357" sideWeight="0.50408995" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32990807" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.R" />
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.csv" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="read data" />
+    <MESSAGE value="dogs vs cats" />
+    <MESSAGE value="multi-step prediction" />
+    <MESSAGE value="one step prediction" />
+    <MESSAGE value="sensor data" />
+    <MESSAGE value="prediction results" />
+    <MESSAGE value="cats vs dots" />
+    <MESSAGE value="CIFAR10" />
+    <MESSAGE value="NLP" />
+    <MESSAGE value="Predictive Maintenance" />
+    <MESSAGE value="Mask-R-CNN" />
+    <MESSAGE value="MINST" />
+    <MESSAGE value="PKLot" />
+    <MESSAGE value="test" />
+    <MESSAGE value="time series prediction" />
+    <MESSAGE value="read DICOM data" />
+    <MESSAGE value="UNet util" />
+    <MESSAGE value="Mask RCNN" />
+    <MESSAGE value="VGG" />
+    <MESSAGE value="UNet" />
+    <MESSAGE value="run length encoding and decoding" />
+    <MESSAGE value="pytorch" />
+    <MESSAGE value="MNIST" />
+    <MESSAGE value="data science bowl 2018" />
+    <MESSAGE value="." />
+    <option name="LAST_COMMIT_MESSAGE" value="." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/dogs_vs_cats/input_data.py</url>
+          <line>125</line>
+          <option name="timeStamp" value="74" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/python/test_shift.py</url>
+          <line>69</line>
+          <option name="timeStamp" value="100" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/python/test_shift.py</url>
+          <line>57</line>
+          <option name="timeStamp" value="101" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/dogs_vs_cats/training.py</url>
+          <line>60</line>
+          <option name="timeStamp" value="107" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/dogs_vs_cats/training.py</url>
+          <line>49</line>
+          <option name="timeStamp" value="108" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/temp2/training.py</url>
+          <line>65</line>
+          <option name="timeStamp" value="114" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/PKLot/train.py</url>
+          <line>126</line>
+          <option name="timeStamp" value="127" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/PKLot/train.py</url>
+          <line>147</line>
+          <option name="timeStamp" value="137" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/CNN/CIFAR10/cifar10.py</url>
+          <line>78</line>
+          <option name="timeStamp" value="145" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/RNN/time_series_prediction/Sensor.py</url>
+          <line>263</line>
+          <option name="timeStamp" value="163" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Mask_RCNN/demo.py</url>
+          <line>120</line>
+          <option name="timeStamp" value="174" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Mask_RCNN/train_shapes.py</url>
+          <line>303</line>
+          <option name="timeStamp" value="176" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Mask_RCNN/model.py</url>
+          <line>1542</line>
+          <option name="timeStamp" value="177" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Mask_RCNN/train_shapes.py</url>
+          <line>315</line>
+          <option name="timeStamp" value="178" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Mask_RCNN/model.py</url>
+          <line>1688</line>
+          <option name="timeStamp" value="179" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/UNet/tf_unet/test.py</url>
+          <line>15</line>
+          <option name="timeStamp" value="183" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/UNet/tf_unet/test.py</url>
+          <line>28</line>
+          <option name="timeStamp" value="184" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/UNet/tf_unet/tf_unet/image_util.py</url>
+          <line>86</line>
+          <option name="timeStamp" value="185" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/UNet/data_preprocess/Dataset.py</url>
+          <line>130</line>
+          <option name="timeStamp" value="217" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/timeseries/timeseries-Tensorflow/examples/predict.py</url>
+          <line>124</line>
+          <option name="timeStamp" value="229" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Torch/demo03.py</url>
+          <line>8</line>
+          <option name="timeStamp" value="254" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Torch/demo04.py</url>
+          <line>27</line>
+          <option name="timeStamp" value="256" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Torch/demo05.py</url>
+          <line>39</line>
+          <option name="timeStamp" value="258" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="295" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/UNet/tf_unet/tf_unet/unet.py" />
+    <entry file="file://$PROJECT_DIR$/UNet/tf_unet/test.py" />
+    <entry file="file://$PROJECT_DIR$/RNN/time_series_prediction/train_batch.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="624">
+          <caret line="26" column="16" lean-forward="false" selection-start-line="26" selection-start-column="16" selection-end-line="26" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RNN/time_series_prediction/sensor-multi-step-prediction_batch.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2952">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UNet/data_preprocess/Dataset.py" />
+    <entry file="file://$PROJECT_DIR$/timeseries/timeseries-fbprophet/R/R/zzz.R" />
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/tensorflow/python/platform/app.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="960">
+          <caret line="47" column="52" lean-forward="false" selection-start-line="47" selection-start-column="52" selection-end-line="47" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/tensorflow/python/client/session.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="950">
+          <caret line="1312" column="56" lean-forward="false" selection-start-line="1312" selection-start-column="56" selection-end-line="1312" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/timeseries/timeseries-Tensorflow/examples/predict.py" />
+    <entry file="file://$PROJECT_DIR$/RNN/time_series_prediction/sensor-one-step-prediction.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="24">
+          <caret line="7" column="35" lean-forward="false" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RNN/time_series_prediction/sensor-multi-step-prediction_single.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="244" column="34" lean-forward="false" selection-start-line="241" selection-start-column="4" selection-end-line="244" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/skimage/transform/_warps.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="87" column="0" lean-forward="false" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="1025" column="0" lean-forward="false" selection-start-line="1025" selection-start-column="0" selection-end-line="1025" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/PIL/Image.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="725">
+          <caret line="1644" column="0" lean-forward="false" selection-start-line="1644" selection-start-column="0" selection-end-line="1644" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/posixpath.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="78" column="0" lean-forward="false" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/os.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="677">
+          <caret line="334" column="0" lean-forward="false" selection-start-line="334" selection-start-column="0" selection-end-line="334" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UNet/data_preprocess/utils.py" />
+    <entry file="file://$PROJECT_DIR$/UNet/data_preprocess/utils.ipynb" />
+    <entry file="file://$PROJECT_DIR$/UNet/data_preprocess/read_file_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="95" column="0" lean-forward="false" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/keras/utils/data_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3048">
+          <caret line="592" column="21" lean-forward="true" selection-start-line="592" selection-start-column="21" selection-end-line="592" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UNet/dataScienceBowl2018/tutorial.ipynb">
+      <provider selected="true" editor-type-id="ipnb-editor">
+        <state>
+          <selected id="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UNet/dataScienceBowl2018/tutorial.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="354" column="11" lean-forward="false" selection-start-line="354" selection-start-column="11" selection-end-line="354" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/torch/cuda/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="293">
+          <caret line="273" column="29" lean-forward="true" selection-start-line="273" selection-start-column="29" selection-end-line="273" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UNet/dataScienceBowl2018/test.csv" />
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/_pytest/assertion/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/python/pickle_write_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="15" column="14" lean-forward="false" selection-start-line="15" selection-start-column="14" selection-end-line="15" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/python/pickle_read_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="10" column="9" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/pandas/io/parsers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="575" column="0" lean-forward="false" selection-start-line="575" selection-start-column="0" selection-end-line="575" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UNet/dataScienceBowl2018/run-length-encoding.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="55" column="30" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UNet/dataScienceBowl2018/run-length-decoding.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="10" column="19" lean-forward="false" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#18#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/torchvision/datasets/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/torchvision/datasets/mnist.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="30" column="20" lean-forward="true" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2017.2/system/python_stubs/1496266631/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="749">
+          <caret line="719" column="6" lean-forward="false" selection-start-line="719" selection-start-column="6" selection-end-line="719" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/torch/nn/modules/conv.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="744">
+          <caret line="36" column="31" lean-forward="true" selection-start-line="36" selection-start-column="31" selection-end-line="36" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Torch/aaa.py" />
+    <entry file="file://$PROJECT_DIR$/Torch/demo05.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="528">
+          <caret line="22" column="48" lean-forward="false" selection-start-line="22" selection-start-column="48" selection-end-line="22" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#13#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Torch/demo04.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="9" column="11" lean-forward="false" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="11" />
+          <folding>
+            <element signature="e#0#12#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/torch/utils/data/dataloader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="797">
+          <caret line="258" column="0" lean-forward="false" selection-start-line="258" selection-start-column="0" selection-end-line="258" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/torch/nn/modules/linear.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="53" column="0" lean-forward="false" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/torch/nn/functional.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="468" column="30" lean-forward="false" selection-start-line="468" selection-start-column="30" selection-end-line="468" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Torch/demo01.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-24">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Torch/demo02.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Torch/demo03.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="12" column="47" lean-forward="true" selection-start-line="12" selection-start-column="47" selection-end-line="12" selection-end-column="47" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/torch/optim/sgd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="385">
+          <caret line="83" column="37" lean-forward="true" selection-start-line="83" selection-start-column="37" selection-end-line="83" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CNN/MNIST/mnist_pytorch2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1632">
+          <caret line="80" column="24" lean-forward="true" selection-start-line="80" selection-start-column="24" selection-end-line="80" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/codecs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="308" column="0" lean-forward="false" selection-start-line="308" selection-start-column="0" selection-end-line="308" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/torch/nn/_functions/linear.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="12" column="63" lean-forward="true" selection-start-line="12" selection-start-column="63" selection-end-line="12" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/anaconda3/lib/python3.6/site-packages/torch/nn/modules/module.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="701">
+          <caret line="221" column="0" lean-forward="false" selection-start-line="221" selection-start-column="0" selection-end-line="221" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CNN/MNIST/mnist1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="36" column="2" lean-forward="false" selection-start-line="36" selection-start-column="2" selection-end-line="36" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CNN/MNIST/mnist_pytorch.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="696">
+          <caret line="66" column="22" lean-forward="false" selection-start-line="66" selection-start-column="22" selection-end-line="66" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
