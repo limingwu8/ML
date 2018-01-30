@@ -1,16 +1,17 @@
 import torch
 import numpy as np
+from PIL import Image
 from torch.autograd import Variable
 import torch.nn as nn
 import torchvision.datasets as dset
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 import torch.nn.functional as F
+from torch.utils.data import DataLoader, Dataset, TensorDataset
 import torch.optim as optim
+import torch
 
-# set some parameters
-batch_size = 128
-
+batch_size = 32
 # download dataset
 ## load mnist dataset
 root = './data'
@@ -59,12 +60,13 @@ optimizer = optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
 def train(epoch = 10):
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
-        data, target = Variable(data.cuda()), Variable(target.cuda())
-        optimizer.zero_grad()
-        output,loss = model(data, target)
-        loss.backward()
-        optimizer.step()
-    print('train epoch: ' + str(epoch) + ', loss: ' + str(loss.data[0]))
+        # data, target = Variable(data.cuda()), Variable(target.cuda())
+        # optimizer.zero_grad()
+        # output,loss = model(data, target)
+        # loss.backward()
+        # optimizer.step()
+        print(batch_idx)
+    # print('train epoch: ' + str(epoch) + ', loss: ' + str(loss.data[0]))
 
 for epoch in range(1, 20):
     train(epoch)

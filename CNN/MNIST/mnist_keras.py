@@ -7,7 +7,7 @@ from keras.models import Sequential, load_model
 from keras.optimizers import RMSprop
 
 np.random.seed(1337)
-train = 0
+train = 1
 
 (X_train,y_train),(X_test,y_test) = mnist.load_data()   # X_train:60000x28x28,y_train:60000
 
@@ -66,7 +66,7 @@ if train == 1:
                   metrics=['accuracy'])
     # train network
     print('Training...')
-    model.fit(X_train,y_train,batch_size=20,epochs=2)
+    model.fit(X_train,y_train,batch_size=5,epochs=2)
     model.save("mnist.h5")
 else:
     print("loading models...")
