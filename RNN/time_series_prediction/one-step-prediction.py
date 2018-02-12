@@ -79,7 +79,7 @@ def forecast_lstm(model, batch_size, X):
 
 test_len = 12
 # load dataset
-series = read_csv('./dataset/shampoo-sales.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
+series = read_csv('./shampoo.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
 
 # transform data to be stationary
 raw_values = series.values

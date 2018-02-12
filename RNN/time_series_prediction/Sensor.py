@@ -1,10 +1,11 @@
 import matplotlib
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 from pandas import DataFrame
 from pandas import Series
 from pandas import concat
 from pandas import read_csv
 from pandas import datetime
+import pandas as pd
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential,load_model
@@ -16,6 +17,7 @@ from numpy import array
 import datetime
 from matplotlib.dates import DateFormatter
 import numpy as np
+from scipy import stats
 import os
 import pickle
 
@@ -41,14 +43,16 @@ class Sensor:
         self.run_on_local = run_on_local
         self.train = train
         self.init_file_name()
+        self.normality_test()
 
     def get_units(self):
         return self.units
 
     def init_file_name(self):
-        self.dataset_path = self.dataset_path + self.sample_rate + '/' + self.sensor_name + '.csv'
+        # self.dataset_path = self.dataset_path + self.sample_rate + '/' + self.sensor_name + '.csv'
+        self.dataset_path = os.path.join(self.dataset_path, self.sample_rate, self.sensor_name + '.csv')
         self.file_name = self.sensor_name + '-' + self.sample_rate
-        self.root_path += self.sensor_name + '/' + self.sample_rate + '/' + str(self.n_seq) + '_step/'
+        self.file_path = os.path.join(self.root_path, self.sensor_name, self.sample_rate, str(self.n_seq) + '_step')
 
     def get_files(self, file_dir):
         '''
@@ -258,8 +262,8 @@ class Sensor:
         if self.save_info:
             fig.set_size_inches(18.5, 10.5)
             fig_zoomed.set_size_inches(18.5, 10.5)
-            fig.savefig(self.root_path + file_name + '.png', bbox_inches='tight', dpi=150)
-            fig_zoomed.savefig(self.root_path + file_name + '-zoomed.png', bbox_inches='tight', dpi=150)
+            fig.savefig(self.file_path + file_name + '.png', bbox_inches='tight', dpi=150)
+            fig_zoomed.savefig(self.file_path + file_name + '-zoomed.png', bbox_inches='tight', dpi=150)
 
         pyplot.close(fig)
         pyplot.close(fig_zoomed)
@@ -282,14 +286,14 @@ class Sensor:
 
     def open_file(self):
 
-        if not os.path.exists(os.path.dirname(self.root_path)):
+        if not os.path.exists(os.path.dirname(self.file_path)):
             try:
-                os.makedirs(os.path.dirname(self.root_path))
+                os.makedirs(os.path.dirname(self.file_path))
             except:
                 print('create folder error!')
         try:
-            self.logs = open(self.root_path + 'logs.txt', 'w')
-            self.pkl = open(self.root_path+'data.pkl','wb')
+            self.logs = open(self.file_path + 'logs.txt', 'w')
+            self.pkl = open(self.file_path+'data.pkl','wb')
         except:
             print('open file error!')
     def close_file(self):
@@ -332,7 +336,7 @@ class Sensor:
         if self.save_info == 1:
             # save model
             model_name = 'model_' + self.file_name + '-' + 'seq_' + str(self.n_seq) + '.h5'
-            model.save(self.root_path + model_name)
+            model.save(self.file_path + model_name)
 
         # make prediction
         forecasts = self.make_forecasts(model, self.n_batch, test, self.n_lag, self.n_seq)
@@ -347,21 +351,64 @@ class Sensor:
         # close file
         self.close_file()
 
+    def run_update(self):
+        pass
+
     def load_model_and_predict(self):
         # load model
         print('loading model ' + self.file_name + '.h5...')
-        model = load_model(self.root_path + 'model_' + self.file_name + '-' + 'seq_' + str(self.n_seq) + '.h5')
+        model = load_model(os.path.join(self.file_path, 'model_' + self.file_name + '-' + 'seq_' + str(self.n_seq) + '.h5'))
         # load dataset
         series, series_values, raw_datetime = self.load_dataset()
         n_test = int(0.2 * series.shape[0])
         scaler, train, test = self.prepare_data(series_values, n_test, self.n_lag, self.n_seq)
         # make a prediction
         forecasts = self.make_forecasts(model, self.n_batch, test, self.n_lag, self.n_seq)
-        # inverse transform forecasts and test
+        # inverse transform forecasts and test        pyplot.show()
+
         forecasts = self.inverse_transform(series_values, forecasts, scaler, n_test + self.n_seq - 1)
+        # map forecasts to a health score
+        self.get_health_score(forecasts, n_test)
+
         actual = [row[self.n_lag:] for row in test]
         actual = self.inverse_transform(series_values, actual, scaler, n_test + self.n_seq - 1)
         # evaluate forecasts
         self.evaluate_forecasts(actual, forecasts, self.n_lag, self.n_seq, self.file_name)
         # plot forecasts
         self.plot_forecasts(series_values, forecasts, n_test, self.file_name, self.sensor_name, raw_datetime, self.n_seq)
+
+    def normality_test(self):
+        _, series_values, _ = self.load_dataset()
+        results = stats.shapiro(series_values)
+        if results[1] > 0.05:
+            self.normality = 1
+        else:
+            self.normality = 0
+        # write results to a file
+        # with open(os.path.join(self.root_path, 'normality.txt'), 'a') as f:
+        #     f.write('sensor name: ' + str(self.sensor_name + '-' + self.sample_rate) + ' ,normality: ' + str(self.normality) + '\n')
+        # save histogram image
+        # fig = pyplot.figure()
+        # pyplot.hist(series_values)
+        # pyplot.title(self.file_name, fontsize=20)
+        # pyplot.xlabel('Value', fontsize=16)
+        # pyplot.ylabel('Frequency', fontsize=16)
+        # fig.savefig(os.path.join(self.root_path, 'distribution_test', self.file_name + '.png'), bbox_inches='tight', dpi=150)
+
+    def get_health_score(self, prediction_value, n_test):
+        _, series_values, _ = self.load_dataset()
+        # calculate the distribution of the training data
+        window = series_values[:len(series_values)-n_test]
+        mu = np.mean(window)
+        sigma = np.std(window)
+        cdf = stats.norm.cdf(prediction_value, loc = mu, scale = sigma)
+        health_index = 1 - abs(cdf - 0.5)*2
+
+        # save health index to file
+        print('save health index to csv starts...')
+        df = pd.DataFrame({'prediction_value':np.squeeze(prediction_value), 'health_index':np.squeeze(health_index)})
+        df.to_csv(os.path.join(self.file_path, 'health_index.csv'), sep=',', encoding='utf-8',index = False)
+        print('save health index to csv done...')
+
+        return health_index
+
