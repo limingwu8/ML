@@ -16,7 +16,11 @@ def pkl2csv(pkl_path, csv_root, interval):
 
     # resample each element in concatenated to a specific interval
     for key in concatenated.keys():
-        concatenated[key] = resample(concatenated[key], interval = interval)
+        # convert index to a specific format ('%Y-%m-%d %H-%M-%S')
+        temp = resample(concatenated[key], interval = interval)
+        time = temp.index.strftime('%Y-%m-%d %H:%M:%S')
+        temp.index = time
+        concatenated[key] = temp
 
 
     if interval == 'D':
@@ -34,7 +38,7 @@ def pkl2csv(pkl_path, csv_root, interval):
         return
 
     for key in dfs:
-        csv_path = os.path.join(csv_root, folder_name, key + '.csv')
+        csv_path = os.path.join(csv_root,'sampled',folder_name, key + '.csv')
         if not os.path.exists(os.path.dirname(csv_path)):
             try:
                 os.makedirs(os.path.dirname(csv_path))
@@ -76,5 +80,5 @@ if __name__ == '__main__':
 
     pkl_path = '..\\dataset\\pkls\\'
     csv_root = '..\\dataset\\csv\\'
-    interval = 'H'
+    interval = 'D'
     pkl2csv(pkl_path, csv_root, interval)
