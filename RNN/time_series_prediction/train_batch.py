@@ -1,5 +1,6 @@
 # from RNN.time_series_prediction.Sensor import *
 import Sensor
+import os
 # configuration
 save_info = 1       # 1: save information in file, 0: do not save
 which_computer = 0    # 0: run on p219, 1: run on civs(windows), 2: run on civs(linux), 3: run on my own laptop(linux), 4: run on bc(linux)
