@@ -7,7 +7,7 @@ which_computer = 0    # 0: run on p219, 1: run on civs(windows), 2: run on civs(
 train = 1           # 1: train model, 0: load model
 
 n_lag = 1
-n_epochs = 1
+n_epochs = 1500
 dataset_path = os.path.join(os.curdir, 'dataset','csv', 'sampled')
 if which_computer==4:
     root_path = '/home/bc/Documents/USS/compare/'
