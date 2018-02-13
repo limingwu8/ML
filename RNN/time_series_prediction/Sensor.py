@@ -213,6 +213,8 @@ class Sensor:
         # plot the entire dataset in blue
         fig = pyplot.figure()
         ax1 = fig.add_subplot(1, 1, 1)
+        # make x label in a specific format
+        ax1.xaxis_date()
         ax1.xaxis.set_major_formatter(DateFormatter('%m-%d'))
         forecasts = np.array(forecasts)
         pyplot.plot(time, series.values, label='Actual data', linewidth=linewidth)
@@ -239,6 +241,7 @@ class Sensor:
         ######################### plot zoomed in figure ########################
         fig_zoomed = pyplot.figure()
         ax2 = fig_zoomed.add_subplot(1, 1, 1)
+        ax2.xaxis_date()
         ax2.xaxis.set_major_formatter(DateFormatter('%m-%d'))
         # plot original data
         start = X[0][0] - 1
@@ -277,7 +280,7 @@ class Sensor:
 
         raw_time = raw_time.values
         raw_datetime = [datetime.datetime.strptime(
-            i, "%d-%b-%Y %H:%M:%S") for i in raw_time]
+            i, "%Y-%m-%d %H:%M:%S") for i in raw_time]
         raw_values = raw_values.values
 
         series_time = Series(raw_time)
@@ -368,7 +371,7 @@ class Sensor:
 
         forecasts = self.inverse_transform(series_values, forecasts, scaler, n_test + self.n_seq - 1)
         # map forecasts to a health score
-        self.get_health_score(forecasts, n_test)
+        # self.get_health_score(forecasts, n_test)
 
         actual = [row[self.n_lag:] for row in test]
         actual = self.inverse_transform(series_values, actual, scaler, n_test + self.n_seq - 1)
