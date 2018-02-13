@@ -1,5 +1,5 @@
 import matplotlib
-# matplotlib.use('Agg')
+matplotlib.use('Agg')
 from pandas import DataFrame
 from pandas import Series
 from pandas import concat
