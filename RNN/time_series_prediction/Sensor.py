@@ -43,7 +43,7 @@ class Sensor:
         self.run_on_local = run_on_local
         self.train = train
         self.init_file_name()
-        self.normality_test()
+        # self.normality_test()
 
     def get_units(self):
         return self.units
@@ -265,8 +265,8 @@ class Sensor:
         if self.save_info:
             fig.set_size_inches(18.5, 10.5)
             fig_zoomed.set_size_inches(18.5, 10.5)
-            fig.savefig(self.file_path + file_name + '.png', bbox_inches='tight', dpi=150)
-            fig_zoomed.savefig(self.file_path + file_name + '-zoomed.png', bbox_inches='tight', dpi=150)
+            fig.savefig(os.path.join(self.file_path, file_name + '.png'), bbox_inches='tight', dpi=150)
+            fig_zoomed.savefig(os.path.join(self.file_path, file_name + '-zoomed.png'), bbox_inches='tight', dpi=150)
 
         pyplot.close(fig)
         pyplot.close(fig_zoomed)
@@ -295,8 +295,8 @@ class Sensor:
             except:
                 print('create folder error!')
         try:
-            self.logs = open(self.file_path + 'logs.txt', 'w')
-            self.pkl = open(self.file_path+'data.pkl','wb')
+            self.logs = open(os.path.join(self.file_path, 'logs.txt'), 'w')
+            self.pkl = open(os.path.join(self.file_path, 'data.pkl'),'wb')
         except:
             print('open file error!')
     def close_file(self):
@@ -339,7 +339,7 @@ class Sensor:
         if self.save_info == 1:
             # save model
             model_name = 'model_' + self.file_name + '-' + 'seq_' + str(self.n_seq) + '.h5'
-            model.save(self.file_path + model_name)
+            model.save(os.path.join(self.file_path, model_name))
 
         # make prediction
         forecasts = self.make_forecasts(model, self.n_batch, test, self.n_lag, self.n_seq)
@@ -371,7 +371,7 @@ class Sensor:
 
         forecasts = self.inverse_transform(series_values, forecasts, scaler, n_test + self.n_seq - 1)
         # map forecasts to a health score
-        # self.get_health_score(forecasts, n_test)
+        self.get_health_score(forecasts, n_test)
 
         actual = [row[self.n_lag:] for row in test]
         actual = self.inverse_transform(series_values, actual, scaler, n_test + self.n_seq - 1)
