@@ -289,9 +289,9 @@ class Sensor:
 
     def open_file(self):
 
-        if not os.path.exists(os.path.dirname(self.file_path)):
+        if not os.path.exists(self.file_path):
             try:
-                os.makedirs(os.path.dirname(self.file_path))
+                os.makedirs(self.file_path)
             except:
                 print('create folder error!')
         try:

@@ -12,7 +12,7 @@ dataset_path = os.path.join(os.curdir, 'dataset','csv', 'sampled')
 if which_computer==4:
     root_path = '/home/bc/Documents/USS/compare/'
 elif which_computer==1:
-    root_path = 'Y:\\USS-RF-Fan-Data-Analytics\\_13_Preliminary-results\\LSTM-preciction\\multi-step-prediction\\compare\\'
+    root_path = 'Y:\\USS-RF-Fan-Data-Analytics\\_13_Preliminary-results\\LSTM-preciction\\multi-step-prediction\\test\\'
 elif which_computer==0:
     root_path = '/home/PNW/wu1114/Documents/USS/compare/'
 else:
