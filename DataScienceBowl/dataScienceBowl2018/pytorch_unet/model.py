@@ -5,8 +5,6 @@ The main UNet model implementation
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-
 
 # Utility Functions
 ''' when filter kernel= 3x3, padding=1 makes in&out matrix same size'''
@@ -42,6 +40,7 @@ class UNet(nn.Module):
         self.conv4 = conv_bn_leru(256, 512)
         self.conv5 = conv_bn_leru(512, 1024)
         self.down_pooling = nn.MaxPool2d(2)
+
         # go up
         self.up_pool6 = up_pooling(1024, 512)
         self.conv6 = conv_bn_leru(1024, 512)
@@ -76,6 +75,7 @@ class UNet(nn.Module):
         p4 = self.down_pooling(x4)
         x5 = self.conv5(p4)
 
+        # go up
         p6 = self.up_pool6(x5)
         x6 = torch.cat([p6, x4], dim=1)
         x6 = self.conv6(x6)
@@ -92,10 +92,8 @@ class UNet(nn.Module):
         x9 = torch.cat([p9, x1], dim=1)
         x9 = self.conv9(x9)
 
-        # go up
-        x10 = self.conv10(x9)
 
-        output = F.sigmoid(x10)
+        output = self.conv10(x9)
 
         return output
 

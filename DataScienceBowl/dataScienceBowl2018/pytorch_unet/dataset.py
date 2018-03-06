@@ -43,8 +43,8 @@ class Rescale(object):
 
         # resize the image,
         # preserve_range means not normalize the image when resize
-        img = transform.resize(image, (new_h, new_w), preserve_range=True, mode='reflect')
-        mask = transform.resize(mask, (new_h, new_w), preserve_range=True, mode='reflect')
+        img = transform.resize(image, (new_h, new_w), preserve_range=True, mode='constant')
+        mask = transform.resize(mask, (new_h, new_w), preserve_range=True, mode='constant')
 
         return {'image': img, 'mask': mask, 'img_id':img_id}
 
@@ -90,6 +90,7 @@ class ToTensor(object):
     """Convert ndarrays in sample to Tensors."""
 
     def __call__(self, sample):
+        # if sample.keys
         image, mask, img_id = sample['image'], sample['mask'], sample['img_id']
 
         # swap color axis because
@@ -97,31 +98,32 @@ class ToTensor(object):
         # torch image: C X W X H
         image = image.transpose((2, 0, 1))
         mask = mask.transpose((2, 0, 1))
-        return {'image': torch.from_numpy(image),
-                'mask': torch.from_numpy(mask),
+        return {'image': torch.from_numpy(image.astype(np.uint8)),
+                'mask': torch.from_numpy(mask.astype(np.uint8)),
                 'img_id': img_id}
+
 
 # Helper function to show a batch
 def show_batch(sample_batched):
     """Show image with landmarks for a batch of samples."""
-    images_batch, masks_batch = sample_batched['image'], sample_batched['mask']
+    images_batch, masks_batch = sample_batched['image'].numpy().astype(np.uint8), sample_batched['mask'].numpy().astype(np.bool)
     batch_size = len(images_batch)
     for i in range(batch_size):
         plt.figure()
         plt.subplot(1, 2, 1)
         plt.tight_layout()
-        plt.imshow(images_batch[i].numpy().transpose((1, 2, 0)))
+        plt.imshow(images_batch[i].transpose((1, 2, 0)))
         plt.subplot(1, 2, 2)
         plt.tight_layout()
-        plt.imshow(np.squeeze(masks_batch[i].numpy().transpose((1, 2, 0))))
+        plt.imshow(np.squeeze(masks_batch[i].transpose((1, 2, 0))))
 
-# Load Data Science Bowl 2018 dataset
-
+# Load Data Science Bowl 2018 training dataset
 class DSB2018Dataset(Dataset):
     def __init__(self, root_dir, img_id, transform=None):
         """
         Args:
         :param root_dir (string): Directory with all the images
+        :param img_id (list): lists of image id
         :param transform (callable, optional): Optional transform to be applied on a sample
         """
         self.root_dir = root_dir
@@ -135,8 +137,8 @@ class DSB2018Dataset(Dataset):
     def __getitem__(self, idx):
         img_dir = os.path.join(self.root_dir, self.img_id[idx], 'image.png')
         mask_dir = os.path.join(self.root_dir, self.img_id[idx], 'mask.png')
-        img = io.imread(img_dir)
-        mask = io.imread(mask_dir, as_grey=True).astype(np.uint8)
+        img = io.imread(img_dir).astype(np.uint8)
+        mask = io.imread(mask_dir, as_grey=True).astype(np.bool)
         mask = np.expand_dims(mask, axis=-1)
         sample = {'image':img, 'mask':mask, 'img_id':self.img_id[idx]}
         if self.transform:
@@ -198,15 +200,12 @@ def get_train_valid_loader(root_dir, batch_size=16, split=True,
                                 shuffle=shuffle, num_workers=num_workers, pin_memory=pin_memory)
         return dataloader
 
-
 if __name__ == '__main__':
     opt = Option()
-    root_dir = opt.root_dir
-    dataloader, val_loader = get_train_valid_loader(root_dir, batch_size=opt.batch_size,
+    dataloader, val_loader = get_train_valid_loader(opt.root_dir, batch_size=opt.batch_size,
                                                         split=True, shuffle=opt.shuffle,
                                                         num_workers=opt.num_workers,
                                                         val_ratio=0.1, pin_memory=opt.pin_memory)
-
     for i_batch, sample_batched in enumerate(val_loader):
         print(i_batch, sample_batched['image'].size(), sample_batched['mask'].size())
         show_batch(sample_batched)

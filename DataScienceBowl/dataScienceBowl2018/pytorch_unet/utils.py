@@ -61,9 +61,11 @@ class Option(Config):
     test_dir = '/home/liming/Documents/dataset/dataScienceBowl2018/stage1_test'
     num_workers = 1     # number of threads for data loading, set to 1 if using CUDA
     shuffle = True      # shuffle the data set
-    batch_size = 2      # GTX1060 3G Memory
+    batch_size = 1      # GTX1060 3G Memory
     is_train = True     # True for training, False for testing
     shuffle = True
+
+    n_gpu = 1
 
     learning_rate = 1e-3
     weight_decay = 1e-4
