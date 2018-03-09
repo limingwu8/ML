@@ -10,6 +10,8 @@ from tqdm import tqdm
 from PIL import Image
 import numpy as np
 import torch
+from skimage.morphology import label
+import pandas as pd
 import matplotlib.pylab as plt
 
 
@@ -58,23 +60,28 @@ class Option(Config):
     root_dir = '/home/liming/Documents/dataset/dataScienceBowl2018/combined'
 
     # root dir of testing set
-    test_dir = '/home/liming/Documents/dataset/dataScienceBowl2018/stage1_test'
-    num_workers = 1     # number of threads for data loading, set to 1 if using CUDA
-    shuffle = True      # shuffle the data set
-    batch_size = 1      # GTX1060 3G Memory
-    is_train = True     # True for training, False for testing
-    shuffle = True
+    test_dir = '/home/liming/Documents/dataset/dataScienceBowl2018/testing_data'
 
-    n_gpu = 1
+    # save segmenting results (prediction masks) to this folder
+    results_dir = '/home/liming/Documents/dataset/dataScienceBowl2018/results'
 
-    learning_rate = 1e-3
-    weight_decay = 1e-4
+    num_workers = 1     	# number of threads for data loading
+    shuffle = True      	# shuffle the data set
+    batch_size = 2     		# GTX1060 3G Memory
+    epochs = 100			# number of epochs to train
+    is_train = False     	# True for training, False for making prediction
+    save_model = True   	# True for saving the model, False for not saving the model
 
-    pin_memory = True   # store data in CPU pin buffer rather than memory. when using CUDA, set to True
+    n_gpu = 1				# number of GPUs
 
-    is_cuda = torch.cuda.is_available()  # True --> GPU
-    num_gpus = torch.cuda.device_count()  # number of GPUs
-    checkpoint_dir = ""  # dir to save checkpoints
+    learning_rate = 1e-3	# learning rage
+    weight_decay = 1e-4		# weight decay
+
+    pin_memory = True   	# use pinned (page-locked) memory. when using CUDA, set to True
+
+    is_cuda = torch.cuda.is_available()  	# True --> GPU
+    num_gpus = torch.cuda.device_count()  	# number of GPUs
+    checkpoint_dir = "./checkpoint"  		# dir to save checkpoints
     dtype = torch.cuda.FloatTensor if is_cuda else torch.Tensor  # data type
 
 """
@@ -86,10 +93,12 @@ class Utils(object):
     """
     Initialize image parameters from DSB2018Config class
     """
-    def __init__(self, src_root_path, dest_root_path):
+    def __init__(self, stage1_train_src, stage1_train_dest, stage1_test_src, stage1_test_dest):
         self.opt = Option
-        self.src_root_path = src_root_path
-        self.dest_root_path = dest_root_path
+        self.stage1_train_src = stage1_train_src
+        self.stage1_train_dest = stage1_train_dest
+        self.stage1_test_src = stage1_test_src
+        self.stage1_test_dest = stage1_test_dest
 
     # Combine all separated masks into one mask
     def assemble_masks(self, path):
@@ -106,17 +115,10 @@ class Utils(object):
         # mask = np.expand_dims(mask, axis=-1)
         return mask
 
-    #
+    # read all training data and save them to other folder
     def prepare_training_data(self):
-        '''
-        Args:
-            file_dir: root file directory
-        Returns:
-            list of training images, in ndarray, e.g. (560,256,256,4)
-            list of training labels, in ndarray, e.g. (560,256,256,1)
-        '''
         # get imageId
-        train_ids = next(os.walk(self.src_root_path))[1]
+        train_ids = next(os.walk(self.stage1_train_src))[1]
 
         # read training data
         X_train = []
@@ -124,98 +126,77 @@ class Utils(object):
         print('reading training data starts...')
         sys.stdout.flush()
         for n, id_ in tqdm(enumerate(train_ids)):
-            path = os.path.join(self.src_root_path, id_)
+            path = os.path.join(self.stage1_train_src, id_)
+            dest = os.path.join(self.stage1_train_dest, id_)
             img = Image.open(os.path.join(path, 'images', id_ + '.png')).convert("RGB")
-            # img = img.resize((self.config.IMG_HEIGHT, self.config.IMG_WIDTH))
-            # X_train[n] = img
-            # Y_train[n] = self.assemble_masks(path)
-            X_train.append(np.asarray(img))
-            Y_train.append(self.assemble_masks(path))
+            mask = self.assemble_masks(path)
+            img.save(os.path.join(dest, 'image.png'))
+            Image.fromarray(mask).save(os.path.join(dest, 'mask.png'))
 
-        self.X_train = X_train
-        self.Y_train = Y_train
-        self.train_ids = train_ids
         print('reading training data done...')
 
-    # save image and combined masks into a new folder
-    def save_training_data(self):
-        print('writing training data starts...')
-        for i in tqdm(range(0, len(self.train_ids))):
-            # create directories if they are not exists
-            id = self.train_ids[i]
-            id_dir = os.path.join(self.dest_root_path, id)
-            if not os.path.exists(id_dir):
-                os.mkdir(id_dir)
-
-            image = self.X_train[i]
-            mask = self.Y_train[i]
-            Image.fromarray(image).save(os.path.join(id_dir, 'image.png'))
-            Image.fromarray(mask).save(os.path.join(id_dir, 'mask.png'))
-
-        print('writing training data done...')
-
+    # read testing data and save them to other folder
     def prepare_testing_data(self):
-        '''
-        Args:
-            file_dir: root file directory
-        Returns:
-            list of training images, in ndarray, e.g. (560,256,256,4)
-            list of training labels, in ndarray, e.g. (560,256,256,1)
-        '''
         # get imageId
-        train_ids = next(os.walk(self.src_root_path))[1]
-
+        test_ids = next(os.walk(self.stage1_test_src))[1]
         # read training data
-        X_train = []
-        Y_train = []
-        print('reading training data starts...')
+        print('reading testing data starts...')
         sys.stdout.flush()
-        for n, id_ in tqdm(enumerate(train_ids)):
-            path = os.path.join(self.src_root_path, id_)
-            img = Image.open(os.path.join(path, 'images', id_ + '.png')).convert("RGB")
-            # img = img.resize((self.config.IMG_HEIGHT, self.config.IMG_WIDTH))
-            # X_train[n] = img
-            # Y_train[n] = self.assemble_masks(path)
-            X_train.append(np.asarray(img))
-            Y_train.append(self.assemble_masks(path))
+        for n, id_ in tqdm(enumerate(test_ids)):
+            path = os.path.join(self.stage1_test_src, id_, 'images', id_+'.png')
+            dest = os.path.join(self.stage1_test_dest, id_)
+            if not os.path.exists(dest):
+                os.mkdir(dest)
+            img = Image.open(path).convert("RGB")
+            img.save(os.path.join(dest, 'image.png'))
 
-        self.X_train = X_train
-        self.Y_train = Y_train
-        self.train_ids = train_ids
-        print('reading training data done...')
+        print('reading testing data done...')
 
-    # save image and combined masks into a new folder
-    def save_testing_data(self):
-        print('writing training data starts...')
-        for i in tqdm(range(0, len(self.train_ids))):
-            # create directories if they are not exists
-            id = self.train_ids[i]
-            id_dir = os.path.join(self.dest_root_path, id)
-            if not os.path.exists(id_dir):
-                os.mkdir(id_dir)
+# Run-length encoding stolen from https://www.kaggle.com/rakhlin/fast-run-length-encoding-python
+def rle_encoding(x):
+    dots = np.where(x.T.flatten() == 1)[0]
+    run_lengths = []
+    prev = -2
+    for b in dots:
+        if (b>prev+1): run_lengths.extend((b + 1, 0))
+        run_lengths[-1] += 1
+        prev = b
+    return run_lengths
 
-            image = self.X_train[i]
-            mask = self.Y_train[i]
-            Image.fromarray(image).save(os.path.join(id_dir, 'image.png'))
-            Image.fromarray(mask).save(os.path.join(id_dir, 'mask.png'))
+def prob_to_rles(x, cutoff=0.5):
+    lab_img = label(x > cutoff)
+    for i in range(1, lab_img.max() + 1):
+        yield rle_encoding(lab_img == i)
 
-        print('writing training data done...')
+def encode_and_save(preds_test_upsampled, test_ids):
+    """
+    Use run-length-encoding encode the prediction masks and save to csv file for submitting
+    :param preds_test_upsampled: list, for each elements, numpy array (Width, Height)
+    :param test_ids: list, for each elements, image id
+    :return:
+        save to csv file
+    """
+    new_test_ids = []
+    rles = []
+    for n, id_ in enumerate(test_ids):
+        rle = list(prob_to_rles(preds_test_upsampled[n]))
+        rles.extend(rle)
+        new_test_ids.extend([id_] * len(rle))
+
+    sub = pd.DataFrame()
+    sub['ImageId'] = new_test_ids
+    sub['EncodedPixels'] = pd.Series(rles).apply(lambda x: ' '.join(str(y) for y in x))
+    sub.to_csv('sub-dsbowl2018.csv', index=False)
 
 if __name__ == '__main__':
-    """ Prepare training data
-    read data from src_root_path, save combined data to dest_root_path
+    """ Prepare training data and testing data
+    read data and overlay masks and save to destination path
     """
-    src_root_path = '/home/liming/Documents/dataset/dataScienceBowl2018/stage1_train'
-    dest_root_path = '/home/liming/Documents/dataset/dataScienceBowl2018/combined'
-    util = Utils(src_root_path, dest_root_path)
-    util.prepare_training_data()
-    util.save_training_data()
+    stage1_train_src = '/home/liming/Documents/dataset/dataScienceBowl2018/stage1_train'
+    stage1_train_dest = '/home/liming/Documents/dataset/dataScienceBowl2018/combined'
+    stage1_test_src = '/home/liming/Documents/dataset/dataScienceBowl2018/stage1_test'
+    stage1_test_dest = '/home/liming/Documents/dataset/dataScienceBowl2018/testing_data'
 
-    """ Prepare testing data
-    read data from src_root_path, save combined data to dest_root_path
-    """
-    src_root_path = '/home/liming/Documents/dataset/dataScienceBowl2018/stage1_train'
-    dest_root_path = '/home/liming/Documents/dataset/dataScienceBowl2018/testing_data'
-    util = Utils(src_root_path, dest_root_path)
+    util = Utils(stage1_train_src, stage1_train_dest, stage1_test_src, stage1_test_dest)
     util.prepare_training_data()
-    util.save_training_data()
+    util.prepare_testing_data()

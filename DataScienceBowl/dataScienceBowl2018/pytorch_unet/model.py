@@ -5,6 +5,8 @@ The main UNet model implementation
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
+
 
 # Utility Functions
 ''' when filter kernel= 3x3, padding=1 makes in&out matrix same size'''
@@ -53,6 +55,7 @@ class UNet(nn.Module):
 
         self.conv10 = nn.Conv2d(64, nclasses, 1)
 
+
         # test weight init
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -94,6 +97,7 @@ class UNet(nn.Module):
 
 
         output = self.conv10(x9)
+        output = F.sigmoid(output)
 
         return output
 
