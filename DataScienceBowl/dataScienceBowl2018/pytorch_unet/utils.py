@@ -68,7 +68,7 @@ class Option(Config):
     num_workers = 1     	# number of threads for data loading
     shuffle = True      	# shuffle the data set
     batch_size = 2     		# GTX1060 3G Memory
-    epochs = 100			# number of epochs to train
+    epochs = 150			# number of epochs to train
     is_train = False     	# True for training, False for making prediction
     save_model = True   	# True for saving the model, False for not saving the model
 
