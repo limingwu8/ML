@@ -91,8 +91,13 @@ def run_test(model, test_loader, opt):
         for i in range(0,output.shape[0]):
             pred_mask = np.squeeze(output[i])
             id = img_id[i]
-            h = height[i].cpu().numpy()
-            w = width[i].cpu().numpy()
+            h = height[i]
+            w = width[i]
+            # in p219 the w and h above is int
+            # in local the w and h above is LongTensor
+            if not isinstance(h, int):
+                h = h.cpu().numpy()
+                w = w.cpu().numpy()
             # shape: (Height, Width)
             pred_mask = resize(pred_mask, (h, w), mode='constant')
             pred_mask = (pred_mask > 0.5)
