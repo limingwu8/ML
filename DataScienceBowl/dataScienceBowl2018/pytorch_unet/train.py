@@ -9,7 +9,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.autograd import Variable
 from dataset import get_train_valid_loader, get_test_loader
-from model import UNet
+from model import UNet2
 from utils import Option, encode_and_save
 from skimage import io
 from skimage.transform import resize
@@ -87,12 +87,12 @@ def run_test(model, test_loader, opt):
         output = model.forward(data)
         # output = (output > 0.5)
         output = output.data.cpu().numpy()
-        output = output.transpose((0, 2, 3, 1))    # transpose to (B,W,H,C)
+        output = output.transpose((0, 3, 2, 1))    # transpose to (B,H,W,C)
         for i in range(0,output.shape[0]):
             pred_mask = np.squeeze(output[i])
             id = img_id[i]
-            h = height[i]
-            w = width[i]
+            h = height[i].cpu().numpy()
+            w = width[i].cpu().numpy()
             # shape: (Height, Width)
             pred_mask = resize(pred_mask, (h, w), mode='constant')
             pred_mask = (pred_mask > 0.5)
@@ -106,22 +106,19 @@ def run_test(model, test_loader, opt):
 if __name__ == '__main__':
     """Train Unet model"""
     opt = Option()
-    # split all data to train and validation, set split = True
-    # train_loader, val_loader = get_train_valid_loader(opt.root_dir, batch_size=opt.batch_size,
-    #                                       split=True, shuffle=opt.shuffle,
-    #                                       num_workers=opt.num_workers,
-    #                                       val_ratio=0.1, pin_memory=opt.pin_memory)
-
-    # load all data for training
-    train_loader = get_train_valid_loader(opt.root_dir, batch_size=opt.batch_size,
-                                                     split=False, shuffle=opt.shuffle,
-                                                     num_workers=opt.num_workers,
-                                                     val_ratio=0.1, pin_memory=opt.pin_memory)
-    # load testing data for making predictions
-    test_loader = get_test_loader(opt.test_dir, batch_size=opt.batch_size,shuffle=opt.shuffle,
-                                    num_workers=opt.num_workers, pin_memory=opt.pin_memory)
-    model = UNet(input_channels=3, nclasses=1)
+    model = UNet2(input_channels=3, nclasses=1)
     if opt.is_train:
+        # split all data to train and validation, set split = True
+        # train_loader, val_loader = get_train_valid_loader(opt.root_dir, batch_size=opt.batch_size,
+        #                                       split=True, shuffle=opt.shuffle,
+        #                                       num_workers=opt.num_workers,
+        #                                       val_ratio=0.1, pin_memory=opt.pin_memory)
+
+        # load all data for training
+        train_loader = get_train_valid_loader(opt.root_dir, batch_size=opt.batch_size,
+                                              split=False, shuffle=opt.shuffle,
+                                              num_workers=opt.num_workers,
+                                              val_ratio=0.1, pin_memory=opt.pin_memory)
         if opt.n_gpu > 1:
             model = nn.DataParallel(model)
         if opt.is_cuda:
@@ -134,6 +131,9 @@ if __name__ == '__main__':
         if opt.save_model:
             torch.save(model.state_dict(), os.path.join(opt.checkpoint_dir, 'model-01.pt'))
     else:
+        # load testing data for making predictions
+        test_loader = get_test_loader(opt.test_dir, batch_size=opt.batch_size, shuffle=opt.shuffle,
+                                      num_workers=opt.num_workers, pin_memory=opt.pin_memory)
         # load the model and run test
         model.load_state_dict(torch.load(os.path.join(opt.checkpoint_dir, 'model-01.pt')))
         if opt.n_gpu > 1:
