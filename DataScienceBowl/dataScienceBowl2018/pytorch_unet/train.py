@@ -98,10 +98,8 @@ def run_test(model, test_loader, opt):
             if not isinstance(h, int):
                 h = h.cpu().numpy()
                 w = w.cpu().numpy()
-            # shape: (Height, Width)
             pred_mask = resize(pred_mask, (h, w), mode='constant')
             pred_mask = (pred_mask > 0.5)
-            # reshape to (Width, Height)
             pred_mask = pred_mask.transpose((1, 0))
             predictions.append(pred_mask)
             img_ids.append(id)
