@@ -87,7 +87,7 @@ def run_test(model, test_loader, opt):
         output = model.forward(data)
         # output = (output > 0.5)
         output = output.data.cpu().numpy()
-        output = output.transpose((0, 3, 2, 1))    # transpose to (B,H,W,C)
+        output = output.transpose((0, 2, 3, 1))    # transpose to (B,H,W,C)
         for i in range(0,output.shape[0]):
             pred_mask = np.squeeze(output[i])
             id = img_id[i]
@@ -100,7 +100,6 @@ def run_test(model, test_loader, opt):
                 w = w.cpu().numpy()
             pred_mask = resize(pred_mask, (h, w), mode='constant')
             pred_mask = (pred_mask > 0.5)
-            pred_mask = pred_mask.transpose((1, 0))
             predictions.append(pred_mask)
             img_ids.append(id)
 
@@ -126,7 +125,7 @@ if __name__ == '__main__':
             model = nn.DataParallel(model)
         if opt.is_cuda:
             model = model.cuda()
-        optimizer = optim.Adam(model.parameters(), lr=opt.learning_rate)
+        optimizer = optim.Adam(model.parameters(), lr=opt.learning_rate, weight_decay=opt.weight_decay)
         criterion = nn.BCELoss().cuda()
         # start to run a training
         run_train(model, train_loader, opt, criterion)

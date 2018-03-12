@@ -7,6 +7,7 @@ import os
 import sys
 import numpy as np
 from tqdm import tqdm
+from skimage import io
 from PIL import Image
 import numpy as np
 import torch
@@ -176,6 +177,14 @@ def encode_and_save(preds_test_upsampled, test_ids):
     :return:
         save to csv file
     """
+    # save as imgs
+    for i in range(0, len(test_ids)):
+        path = os.path.join(Option.results_dir, test_ids[i])
+        if not os.path.exists(path):
+            os.mkdir(path)
+        # Image.fromarray(preds_test_upsampled[i]).save(os.path.join(path,'prediction.png'))
+        plt.imsave(os.path.join(path, 'prediction.png'),preds_test_upsampled[i], cmap='gray')
+    # save as encoding
     new_test_ids = []
     rles = []
     for n, id_ in enumerate(test_ids):
