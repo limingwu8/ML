@@ -15,7 +15,7 @@ batch_size = 32
 # download dataset
 ## load mnist dataset
 root = './data'
-download = False
+download = True
 trans = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (1.0,))])
 train_set = dset.MNIST(root=root, train=True, transform=trans, download=download)
 test_set = dset.MNIST(root=root, train=False, transform=trans)
@@ -60,13 +60,13 @@ optimizer = optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
 def train(epoch = 10):
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
-        # data, target = Variable(data.cuda()), Variable(target.cuda())
-        # optimizer.zero_grad()
-        # output,loss = model(data, target)
-        # loss.backward()
-        # optimizer.step()
-        print(batch_idx)
-    # print('train epoch: ' + str(epoch) + ', loss: ' + str(loss.data[0]))
+        data, target = Variable(data.cuda()), Variable(target.cuda())
+        optimizer.zero_grad()
+        output,loss = model(data, target)
+        loss.backward()
+        optimizer.step()
+        # print(batch_idx)
+    print('train epoch: ' + str(epoch) + ', loss: ' + str(loss.data[0]))
 
 for epoch in range(1, 20):
     train(epoch)

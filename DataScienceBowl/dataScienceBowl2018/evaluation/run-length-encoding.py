@@ -54,7 +54,7 @@ def rles_to_csv(ids, rles):
 
 if __name__ == '__main__':
     # prepare testing data, for convenience, I just read from pickle
-    pkl_file = open('data.pkl', 'rb')
+    pkl_file = open('../keras_unet/data.pkl', 'rb')
     test_ids = pickle.load(pkl_file)
     preds_test_upsampled = pickle.load(pkl_file)
     pkl_file.close()
