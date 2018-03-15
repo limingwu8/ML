@@ -1,5 +1,5 @@
 import matplotlib
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 from pandas import DataFrame
 from pandas import Series
 from pandas import concat
@@ -26,9 +26,9 @@ class Sensor:
          'MAIN_FILTER_OUT_PRESSURE':'PSI','OIL_RETURN_TEMPERATURE':'Fahrenheit',
          'TANK_FILTER_IN_PRESSURE':'PSI','TANK_FILTER_OUT_PRESSURE':'PSI',
          'TANK_LEVEL':'Inch','TANK_TEMPERATURE':'Fahrenheit','FT-202B':'Mils',
-         'FT-204B':'Mils','PT-203':'Mils','PT-204.HS':'Mils'}
+         'FT-204B':'Mils','PT-203':'Mils','PT-204':'Mils'}
 
-    def __init__(self, dataset_path, sensor_name,sample_rate, root_path, n_epochs = 1, n_batch = 1,
+    def __init__(self, dataset_path, sensor_name,operating_range, sample_rate, root_path, n_epochs = 1, n_batch = 1,
                  save_info = 0, n_neurons = 1, run_on_local = 1, train = 1, n_lag = 1, n_seq = 1):
         self.n_lag = n_lag
         self.n_seq = n_seq
@@ -37,13 +37,14 @@ class Sensor:
         self.n_neurons = n_neurons
         self.dataset_path = dataset_path
         self.sensor_name = sensor_name
+        self.operating_range = operating_range
         self.sample_rate = sample_rate
         self.root_path = root_path
         self.save_info = save_info
         self.run_on_local = run_on_local
         self.train = train
         self.init_file_name()
-        # self.normality_test()
+        self.normality_test()
 
     def get_units(self):
         return self.units
@@ -371,7 +372,7 @@ class Sensor:
 
         forecasts = self.inverse_transform(series_values, forecasts, scaler, n_test + self.n_seq - 1)
         # map forecasts to a health score
-        self.get_health_score(forecasts, n_test)
+        self.get_health_score(forecasts)
 
         actual = [row[self.n_lag:] for row in test]
         actual = self.inverse_transform(series_values, actual, scaler, n_test + self.n_seq - 1)
@@ -391,27 +392,22 @@ class Sensor:
         # with open(os.path.join(self.root_path, 'normality.txt'), 'a') as f:
         #     f.write('sensor name: ' + str(self.sensor_name + '-' + self.sample_rate) + ' ,normality: ' + str(self.normality) + '\n')
         # save histogram image
-        # fig = pyplot.figure()
-        # pyplot.hist(series_values)
-        # pyplot.title(self.file_name, fontsize=20)
-        # pyplot.xlabel('Value', fontsize=16)
-        # pyplot.ylabel('Frequency', fontsize=16)
-        # fig.savefig(os.path.join(self.root_path, 'distribution_test', self.file_name + '.png'), bbox_inches='tight', dpi=150)
+        fig = pyplot.figure()
+        pyplot.hist(series_values)
+        pyplot.title(self.file_name, fontsize=20)
+        pyplot.xlabel('Value', fontsize=16)
+        pyplot.ylabel('Frequency', fontsize=16)
+        fig.savefig(os.path.join(self.root_path, 'distribution_test', self.file_name + '.png'), bbox_inches='tight', dpi=150)
 
-    def get_health_score(self, prediction_value, n_test):
-        _, series_values, _ = self.load_dataset()
-        # calculate the distribution of the training data
-        window = series_values[:len(series_values)-n_test]
-        mu = np.mean(window)
-        sigma = np.std(window)
-        cdf = stats.norm.cdf(prediction_value, loc = mu, scale = sigma)
-        health_index = 1 - abs(cdf - 0.5)*2
-
-        # save health index to file
+    def get_health_score(self, prediction_value):
+        normal, low, high = self.operating_range
+        three_sigma = abs(normal-low) if abs(normal-low)>abs(normal-high) else abs(normal-high)
+        mu = normal
+        sigma = three_sigma/3
+        cdf = stats.norm.cdf(prediction_value, loc=mu, scale=sigma)
+        health_index = 1 - abs(cdf - 0.5) * 2
+        #     # save health index to file
         print('save health index to csv starts...')
         df = pd.DataFrame({'prediction_value':np.squeeze(prediction_value), 'health_index':np.squeeze(health_index)})
         df.to_csv(os.path.join(self.file_path, 'health_index.csv'), sep=',', encoding='utf-8',index = False)
         print('save health index to csv done...')
-
-        return health_index
-
