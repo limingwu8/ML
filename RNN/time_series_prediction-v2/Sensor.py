@@ -18,8 +18,10 @@ import datetime
 from matplotlib.dates import DateFormatter
 import numpy as np
 from scipy import stats
+from scipy.stats import rayleigh
 import os
 import pickle
+from collections import OrderedDict
 
 class Sensor:
     units = {'MAIN_FILTER_IN_PRESSURE':'PSI','MAIN_FILTER_OIL_TEMP':'Fahrenheit',
@@ -44,13 +46,11 @@ class Sensor:
         self.run_on_local = run_on_local
         self.train = train
         self.init_file_name()
-        self.normality_test()
 
     def get_units(self):
         return self.units
 
     def init_file_name(self):
-        # self.dataset_path = self.dataset_path + self.sample_rate + '/' + self.sensor_name + '.csv'
         self.dataset_path = os.path.join(self.dataset_path, self.sample_rate, self.sensor_name + '.csv')
         self.file_name = self.sensor_name + '-' + self.sample_rate
         self.file_path = os.path.join(self.root_path, self.sensor_name, self.sample_rate, str(self.n_seq) + '_step')
@@ -104,6 +104,15 @@ class Sensor:
             diff.append(value)
         return Series(diff)
 
+    # if the prediction values are minus, set them zero
+    def constrain(self, forecasts):
+        for i in range(0, len(forecasts)):
+            item = forecasts[i]
+            for j in range(0, len(item)):
+                if forecasts[i][j] < 0:
+                    forecasts[i][j] = 0
+        return forecasts
+
     # transform series into train and test sets for supervised learning
     def prepare_data(self, series, n_test, n_lag, n_seq):
         # extract raw values
@@ -135,8 +144,10 @@ class Sensor:
         model.compile(loss='mean_squared_error', optimizer='adam')
         # fit network
         for i in range(nb_epoch):
-            model.fit(X, y, epochs=1, batch_size=n_batch, verbose=0, shuffle=False)
+            model.fit(X, y, epochs=1, batch_size=n_batch, verbose=2, shuffle=False)
             model.reset_states()
+        # model.fit(X, y, epochs=nb_epoch, batch_size=n_batch, verbose=0, shuffle=False)
+
         return model
 
     # make one forecast with an LSTM,
@@ -315,23 +326,11 @@ class Sensor:
         if self.save_info:
             self.logs.write(self.file_name + '\n')
 
-        # load dataset
-        # series = read_csv(self.dataset_path, sep=',')
-        # header = list(series.columns.values)
-        #
-        # raw_time = series[header[0]]
-        # raw_values = series[header[1]]
-        #
-        # raw_time = raw_time.values
-        # raw_datetime = [datetime.datetime.strptime(
-        #     i, "%d-%b-%Y %H:%M:%S") for i in raw_time]
-        # raw_values = raw_values.values
-        #
-        # series_time = Series(raw_time)
-        # series_values = Series(raw_values)
         series, series_values, raw_datetime = self.load_dataset()
-        # configure
-        n_test = int(0.2 * series.shape[0])
+        # number of testing data, here use Novermber's data as testing
+        # n_test = int(0.2 * series.shape[0])
+        a = [raw_datetime[i].month == 11 for i in range(0, len(raw_datetime))]
+        n_test = len(np.where(a)[0])
 
         # prepare data
         scaler, train, test = self.prepare_data(series_values, n_test, self.n_lag, self.n_seq)
@@ -346,6 +345,7 @@ class Sensor:
         forecasts = self.make_forecasts(model, self.n_batch, test, self.n_lag, self.n_seq)
         # inverse transform forecasts and test
         forecasts = self.inverse_transform(series_values, forecasts, scaler, n_test + self.n_seq - 1)
+        forecasts = self.constrain(forecasts)
         actual = [row[self.n_lag:] for row in test]
         actual = self.inverse_transform(series_values, actual, scaler, n_test + self.n_seq - 1)
         # evaluate forecasts
@@ -364,15 +364,16 @@ class Sensor:
         model = load_model(os.path.join(self.file_path, 'model_' + self.file_name + '-' + 'seq_' + str(self.n_seq) + '.h5'))
         # load dataset
         series, series_values, raw_datetime = self.load_dataset()
-        n_test = int(0.2 * series.shape[0])
+
+        # number of testing data, here use Novermber's data as testing
+        a = [raw_datetime[i].month == 11 for i in range(0, len(raw_datetime))]
+        n_test = len(np.where(a)[0])
         scaler, train, test = self.prepare_data(series_values, n_test, self.n_lag, self.n_seq)
         # make a prediction
         forecasts = self.make_forecasts(model, self.n_batch, test, self.n_lag, self.n_seq)
         # inverse transform forecasts and test        pyplot.show()
-
         forecasts = self.inverse_transform(series_values, forecasts, scaler, n_test + self.n_seq - 1)
-        # map forecasts to a health score
-        self.get_health_score(forecasts)
+        forecasts = self.constrain(forecasts)
 
         actual = [row[self.n_lag:] for row in test]
         actual = self.inverse_transform(series_values, actual, scaler, n_test + self.n_seq - 1)
@@ -381,33 +382,58 @@ class Sensor:
         # plot forecasts
         self.plot_forecasts(series_values, forecasts, n_test, self.file_name, self.sensor_name, raw_datetime, self.n_seq)
 
-    def normality_test(self):
-        _, series_values, _ = self.load_dataset()
-        results = stats.shapiro(series_values)
-        if results[1] > 0.05:
-            self.normality = 1
-        else:
-            self.normality = 0
-        # write results to a file
-        # with open(os.path.join(self.root_path, 'normality.txt'), 'a') as f:
-        #     f.write('sensor name: ' + str(self.sensor_name + '-' + self.sample_rate) + ' ,normality: ' + str(self.normality) + '\n')
-        # save histogram image
-        fig = pyplot.figure()
-        pyplot.hist(series_values)
-        pyplot.title(self.file_name, fontsize=20)
-        pyplot.xlabel('Value', fontsize=16)
-        pyplot.ylabel('Frequency', fontsize=16)
-        fig.savefig(os.path.join(self.root_path, 'distribution_test', self.file_name + '.png'), bbox_inches='tight', dpi=150)
+    def get_health_score(self):
+        print('loading model ' + self.file_name + '.h5...')
+        model = load_model(
+            os.path.join(self.file_path, 'model_' + self.file_name + '-' + 'seq_' + str(self.n_seq) + '.h5'))
+        # load dataset
+        series, series_values, raw_datetime = self.load_dataset()
 
-    def get_health_score(self, prediction_value):
-        normal, low, high = self.operating_range
-        three_sigma = abs(normal-low) if abs(normal-low)>abs(normal-high) else abs(normal-high)
-        mu = normal
-        sigma = three_sigma/3
-        cdf = stats.norm.cdf(prediction_value, loc=mu, scale=sigma)
-        health_index = 1 - abs(cdf - 0.5) * 2
-        #     # save health index to file
-        print('save health index to csv starts...')
-        df = pd.DataFrame({'prediction_value':np.squeeze(prediction_value), 'health_index':np.squeeze(health_index)})
-        df.to_csv(os.path.join(self.file_path, 'health_index.csv'), sep=',', encoding='utf-8',index = False)
-        print('save health index to csv done...')
+        # number of testing data, here use Novermber's data as testing
+        a = [raw_datetime[i].month == 11 for i in range(0, len(raw_datetime))]
+        n_test = len(np.where(a)[0])
+        scaler, train, test = self.prepare_data(series_values, n_test, self.n_lag, self.n_seq)
+        # make a prediction
+        forecasts = self.make_forecasts(model, self.n_batch, test, self.n_lag, self.n_seq)
+        # inverse transform forecast
+        forecasts = self.inverse_transform(series_values, forecasts, scaler, n_test + self.n_seq - 1)
+        forecasts = self.constrain(forecasts)
+        # for sensor 'FT-202B' and 'PT-203', we should use log transfer to make them looks like Gaussian
+        if self.sensor_name in ['FT-202B', 'PT-203', 'FT-204B','PT-204']:
+            # use log transform
+            # normal, low, high = self.operating_range
+            # normal = np.log(normal + 10)
+            # low = np.log(low + 10)
+            # high = np.log(high + 10)
+            # three_sigma = abs(normal-low) if abs(normal-low)>abs(normal-high) else abs(normal-high)
+            # mu = normal
+            # sigma = three_sigma / 3
+            # cdf = stats.norm.cdf(np.log(np.array(forecasts) + 10), loc=mu, scale=sigma)
+            # health_index = 1 - abs(cdf - 0.5) * 2
+            # time = raw_datetime[-n_test:]
+
+            # use rayleigh distribution
+            # if the prediction value is less than the mean of the rayleigh distribution, set health index as 1
+            # otherwise the far from the mean, the less the health index is
+            health_index = np.zeros((len(forecasts),1))
+            mean, var, skew, kurt = rayleigh.stats(moments='mvsk')
+            index = forecasts <= mean
+            health_index[index] = 1
+            index = forecasts > mean
+            cdf = rayleigh.cdf(forecasts)
+            health_index[index] = (1 - cdf[index])*2
+            time = raw_datetime[-n_test:]
+        else:
+            normal, low, high = self.operating_range
+            three_sigma = abs(normal-low) if abs(normal-low)>abs(normal-high) else abs(normal-high)
+            mu = normal
+            sigma = three_sigma/3
+            cdf = stats.norm.cdf(forecasts, loc=mu, scale=sigma)
+            health_index = 1 - abs(cdf - 0.5) * 2
+            time = raw_datetime[-n_test:]
+        if self.save_info:
+            # save health index to file
+            print('save health index to csv starts...')
+            df = pd.DataFrame({'time':time, 'prediction_value':np.squeeze(forecasts), 'health_index':np.squeeze(health_index)}, columns=['time','prediction_value','health_index'])
+            df.to_csv(os.path.join(os.curdir,'health_index',self.sensor_name+'.csv'), sep=',', encoding='utf-8',index = False)
+            print('save health index to csv done...')

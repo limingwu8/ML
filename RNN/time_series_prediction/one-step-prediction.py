@@ -77,20 +77,19 @@ def forecast_lstm(model, batch_size, X):
 	yhat = model.predict(X, batch_size=batch_size)
 	return yhat[0,0]
 
-test_len = 12
 # load dataset
-series = read_csv('./shampoo.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
+series = read_csv('shampoo.csv', header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
 
 # transform data to be stationary
 raw_values = series.values
-diff_values = difference(raw_values, 1)
-
+# diff_values = difference(raw_values, 1)
+diff_values = raw_values
 # transform data to be supervised learning
 supervised = timeseries_to_supervised(diff_values, 1)
 supervised_values = supervised.values
 
 # split data into train and test-sets
-train, test = supervised_values[0:-test_len], supervised_values[-test_len:]
+train, test = supervised_values[0:-12], supervised_values[-12:]
 
 # transform the scale of the data
 scaler, train_scaled, test_scaled = scale(train, test)
@@ -117,9 +116,9 @@ for i in range(len(test_scaled)):
 	print('Month=%d, Predicted=%f, Expected=%f' % (i+1, yhat, expected))
 
 # report performance
-rmse = sqrt(mean_squared_error(raw_values[-test_len:], predictions))
+rmse = sqrt(mean_squared_error(raw_values[-12:], predictions))
 print('Test RMSE: %.3f' % rmse)
 # line plot of observed vs predicted
-pyplot.plot(raw_values[-test_len:])
+pyplot.plot(raw_values[-12:])
 pyplot.plot(predictions)
 pyplot.show()
