@@ -6,8 +6,8 @@ import Sensor
 import os
 # configuration
 save_info = 1       # 1: save information in file, 0: do not save
-which_computer = 1    # 0: run on p219, 1: run on civs(windows), 2: run on civs(linux), 3: run on my own laptop(linux), 4: run on bc(linux)
-train = 1          # 1: train model, 0: load model
+which_computer = 2    # 0: run on p219, 1: run on civs(windows), 2: run on civs(linux), 3: run on my own laptop(linux), 4: run on bc(linux)
+train = 0          # 1: train model, 0: load model
 
 n_lag = 1
 n_epochs = 2000
@@ -16,6 +16,8 @@ if which_computer==4:
     root_path = '/home/bc/Documents/USS/compare-v2/'
 elif which_computer==1:
     root_path = 'Y:\\USS-RF-Fan-Data-Analytics\\_13_Preliminary-results\\LSTM-preciction\\multi-step-prediction\\compare-v2\\'
+elif which_computer==2:
+    root_path = '/home/liming/Documents/USS-RF-Fan-Data-Analytics/_13_Preliminary-results/LSTM-preciction/multi-step-prediction/compare-v2/'
 elif which_computer==0:
     root_path = '/home/PNW/wu1114/Documents/USS/compare-v2/'
 else:
@@ -50,5 +52,6 @@ for name in sensor_names:
             if train == 1:
                 s.run_train()   # train the network
             else:
-                s.get_health_score()  # load .h5 file and make prediction
-
+                # s.get_health_score()  # load .h5 file and make prediction
+                # s.get_all_health_score()
+                s.load_model_and_predict()

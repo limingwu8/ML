@@ -10,8 +10,8 @@ import numpy as np
 
 
 save_info = 1
-root_path = 'Y:\\USS-RF-Fan-Data-Analytics\\_13_Preliminary-results\\LSTM-preciction\\multi-step-prediction\\compare\\health_index\\'
-
+# root_path = 'Y:\\USS-RF-Fan-Data-Analytics\\_13_Preliminary-results\\LSTM-preciction\\multi-step-prediction\\compare\\health_index\\'
+root_path = '/home/liming/Documents/USS-RF-Fan-Data-Analytics/_13_Preliminary-results/LSTM-preciction/multi-step-prediction/compare/health_index/'
 sensor_names = {
     'MAIN_FILTER_IN_PRESSURE','MAIN_FILTER_OIL_TEMP','MAIN_FILTER_OUT_PRESSURE','OIL_RETURN_TEMPERATURE',
     'TANK_FILTER_IN_PRESSURE','TANK_FILTER_OUT_PRESSURE','TANK_LEVEL','TANK_TEMPERATURE','FT-202B',
@@ -49,10 +49,15 @@ def load_dataset(paths):
     return series
 
 def get_paths():
-    root = 'C:\\Users\\wu1114\\PycharmProjects\\ML\\RNN\\time_series_prediction-v2\\health_index\\'
-    files = os.listdir(root)
-    paths = [(root + s) for s in files]
-    return paths
+    root_health_index_all = os.path.join(os.curdir,'health_index_all')
+    files = os.listdir(root_health_index_all)
+    paths_health_index_all = [os.path.join(root_health_index_all, s) for s in files]
+
+    root_health_index_pred = os.path.join(os.curdir,'health_index')
+    files = os.listdir(root_health_index_pred)
+    paths_health_index_pred = [os.path.join(root_health_index_pred, s) for s in files]
+
+    return paths_health_index_all, paths_health_index_pred
 
 def plot_health_index_combined(series, overall_health_index):
     label_fontsize = 35
@@ -79,7 +84,7 @@ def plot_health_index_combined(series, overall_health_index):
     fig.set_size_inches(18.5, 10.5)
     fig.tight_layout()
     fig.subplots_adjust(right=0.65)
-    fig.savefig(os.path.join(root_path, 'health_index_combined.png'), bbox_inches='tight', dpi=150)
+    fig.savefig(os.path.join(root_path,'health_index_all', 'health_index_combined_all.png'), bbox_inches='tight', dpi=150)
     plt.close(fig)
 
 def plot_health_index_separated(series, overall_health_index):
@@ -103,7 +108,7 @@ def plot_health_index_separated(series, overall_health_index):
         plt.legend(fontsize=legend_fontsize)
         # plt.show()
         fig.set_size_inches(18.5, 10.5)
-        fig.savefig(os.path.join(root_path, 'health_index_' + key + '.png'), bbox_inches='tight', dpi=150)
+        fig.savefig(os.path.join(root_path,'health_index_all', 'health_index_' + key + '.png'), bbox_inches='tight', dpi=150)
         plt.close(fig)
     # plot overall health index
     fig = plt.figure()
@@ -120,6 +125,31 @@ def plot_health_index_separated(series, overall_health_index):
     fig.set_size_inches(18.5, 10.5)
     fig.savefig(os.path.join(root_path, 'health_index_overall.png'), bbox_inches='tight', dpi=150)
     plt.close(fig)
+
+def plot_health_index_predicted_and_all(series_all,series_pred):
+    label_fontsize = 35
+    legend_fontsize = 20
+    axis_fontsize = 30
+    linewidth = 5
+
+    for key in series_all.keys():
+        fig = plt.figure()
+        axis = fig.add_subplot(1, 1, 1)
+        axis.xaxis_date()
+        axis.xaxis.set_major_formatter(DateFormatter('%m-%d'))
+        plt.plot(series_all[key].time,series_all[key].health_index, label='ground truth health index', linewidth=linewidth)
+        plt.plot(series_pred[key].time,series_pred[key].health_index, label='predicted health index', linewidth=linewidth)
+        # plt.plot(overall_health_index, label='overall_health_index', linewidth=linewidth)
+        plt.xlabel('Days', fontsize=label_fontsize)
+        plt.ylabel('Health Index', fontsize=label_fontsize)
+        plt.title('Health Index: ' + key, fontsize=label_fontsize)
+        plt.xticks(fontsize=axis_fontsize)
+        plt.yticks(fontsize=axis_fontsize)
+        plt.legend(fontsize=legend_fontsize)
+        # plt.show()
+        fig.set_size_inches(18.5, 10.5)
+        fig.savefig(os.path.join(root_path,'health_index_all_and_pred', 'health_index_' + key + '.png'), bbox_inches='tight', dpi=150)
+        plt.close(fig)
 
 
 def get_combined_health_index(series):
@@ -153,8 +183,11 @@ def get_combined_health_index(series):
     return overall_health_index
 
 if __name__ == '__main__':
-    paths = get_paths()
-    series = load_dataset(paths)
-    overall_health_index = get_combined_health_index(series)
-    plot_health_index_combined(series, overall_health_index)
-    plot_health_index_separated(series, overall_health_index)
+    paths_health_index_all,paths_health_index_pred = get_paths()
+    series_all = load_dataset(paths_health_index_all)
+    series_pred = load_dataset(paths_health_index_pred)
+    plot_health_index_predicted_and_all(series_all,series_pred)
+    # overall_health_index = get_combined_health_index(series)
+    # plot_health_index_combined(series, overall_health_index)
+    # plot_health_index_separated(series, overall_health_index)
+

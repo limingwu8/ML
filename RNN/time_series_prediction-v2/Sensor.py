@@ -243,6 +243,11 @@ class Sensor:
             pyplot.plot(time[index[0]:index[len(index) - 1] + 1], Y[:, i], label='Prediction: t+' + str(i + 1), linewidth=linewidth)
             if plot_one_line == 1:
                 break
+        # plot the operating range
+        pyplot.axhline(y=self.operating_range[0], color='g', linestyle='-', linewidth=linewidth, label='normal')
+        pyplot.axhline(y=self.operating_range[1], color='orange', linestyle='-', linewidth=linewidth, label='low')
+        pyplot.axhline(y=self.operating_range[2], color='r', linestyle='-', linewidth=linewidth, label='high')
+
         pyplot.title(file_name, fontsize=label_fontsize)
         pyplot.legend(fontsize=label_fontsize)
         pyplot.xlabel('Time', fontsize=label_fontsize)
@@ -264,6 +269,11 @@ class Sensor:
             pyplot.plot(time[index[0]:index[len(index) - 1] + 1], Y[:, i], label='Prediction: t+' + str(i + 1), linewidth=linewidth)
             if plot_one_line == 1:
                 break
+        # plot the operating range
+        pyplot.axhline(y=self.operating_range[0], color='g', linestyle='-', linewidth=linewidth, label='normal')
+        pyplot.axhline(y=self.operating_range[1], color='orange', linestyle='-', linewidth=linewidth, label='low')
+        pyplot.axhline(y=self.operating_range[2], color='r', linestyle='-', linewidth=linewidth, label='high')
+
         pyplot.title(file_name, fontsize=label_fontsize)
         pyplot.legend(fontsize=label_fontsize)
         pyplot.xlabel('Time', fontsize=label_fontsize)
@@ -277,7 +287,7 @@ class Sensor:
         if self.save_info:
             fig.set_size_inches(18.5, 10.5)
             fig_zoomed.set_size_inches(18.5, 10.5)
-            fig.savefig(os.path.join(self.file_path, file_name + '.png'), bbox_inches='tight', dpi=150)
+            fig.savefig(os.path.join(self.file_path, file_name + '-with_operating_range.png'), bbox_inches='tight', dpi=150)
             fig_zoomed.savefig(os.path.join(self.file_path, file_name + '-zoomed.png'), bbox_inches='tight', dpi=150)
 
         pyplot.close(fig)
@@ -436,4 +446,35 @@ class Sensor:
             print('save health index to csv starts...')
             df = pd.DataFrame({'time':time, 'prediction_value':np.squeeze(forecasts), 'health_index':np.squeeze(health_index)}, columns=['time','prediction_value','health_index'])
             df.to_csv(os.path.join(os.curdir,'health_index',self.sensor_name+'.csv'), sep=',', encoding='utf-8',index = False)
+            print('save health index to csv done...')
+
+    def get_all_health_score(self):
+        """
+        Calculate the health score for all data set (from May to November)
+        :return:
+        """
+        # load dataset
+        series, series_values, raw_datetime = self.load_dataset()
+        if self.sensor_name in ['FT-202B', 'PT-203', 'FT-204B', 'PT-204']:
+            health_index = np.zeros(len(series_values))
+            mean, var, skew, kurt = rayleigh.stats(moments='mvsk')
+            index = series_values <= mean
+            health_index[index] = 1
+            index = series_values > mean
+            cdf = rayleigh.cdf(series_values)
+            health_index[index] = (1 - cdf[index]) * 2
+            time = raw_datetime
+        else:
+            normal, low, high = self.operating_range
+            three_sigma = abs(normal-low) if abs(normal-low)>abs(normal-high) else abs(normal-high)
+            mu = normal
+            sigma = three_sigma/3
+            cdf = stats.norm.cdf(series_values, loc=mu, scale=sigma)
+            health_index = 1 - abs(cdf - 0.5) * 2
+            time = raw_datetime
+        if self.save_info:
+            # save health index to file
+            print('save health index to csv starts...')
+            df = pd.DataFrame({'time':time, 'value':np.squeeze(series_values), 'health_index':np.squeeze(health_index)}, columns=['time','value','health_index'])
+            df.to_csv(os.path.join(os.curdir,'health_index_all',self.sensor_name+'.csv'), sep=',', encoding='utf-8',index = False)
             print('save health index to csv done...')
