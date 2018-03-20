@@ -31,9 +31,11 @@ def load_dataset(dataset_path):
     return series, series_values, raw_datetime
 
 def get_paths():
-    root = 'C:\\Users\\wu1114\\PycharmProjects\\ML\\RNN\\time_series_prediction\\dataset\\csv\\sampled\\sample_1_day\\'
+    # root = 'C:\\Users\\wu1114\\PycharmProjects\\ML\\RNN\\time_series_prediction\\dataset\\csv\\sampled\\sample_1_day\\'
+    root = os.path.join(os.pardir,'dataset','csv','sampled','sample_1_day')
+
     files = os.listdir(root)
-    paths = [(root + s) for s in files ]
+    paths = [os.path.join(root, s) for s in files ]
     return paths
 
 def plot_save(time, value, sensor_name):
