@@ -12,6 +12,11 @@ operating_range = {
     'TANK_LEVEL':(19,14,23),'TANK_TEMPERATURE':(110,90,130),'FT-202B':(0.5,0,3.5),'FT-204B':(0.5,0,3.5),
     'PT-203':(0.5,0,3.5),'PT-204':(0.5,0,3.5)
 }
+sensor_acronym = {
+        'MAIN_FILTER_IN_PRESSURE': 'P1', 'MAIN_FILTER_OIL_TEMP': 'T1', 'MAIN_FILTER_OUT_PRESSURE': 'P2',
+        'OIL_RETURN_TEMPERATURE': 'T2', 'TANK_FILTER_IN_PRESSURE': 'P3', 'TANK_FILTER_OUT_PRESSURE': 'P4',
+        'TANK_LEVEL': 'L1', 'TANK_TEMPERATURE': 'T3', 'FT-202B': 'V1', 'FT-204B': 'V2', 'PT-203': 'V3', 'PT-204': 'V4'
+    }
 
 
 def load_dataset(dataset_path):
@@ -52,7 +57,7 @@ def plot_save(time, value, sensor_name):
     plt.plot(time,value, linewidth=linewidth, label = 'sensor data')
     plt.xlabel('Time', fontsize=label_fontsize)
     plt.ylabel('Value', fontsize=label_fontsize)
-    plt.title(sensor_name, fontsize=label_fontsize)
+    plt.title(sensor_acronym[sensor_name], fontsize=label_fontsize)
     plt.xticks(fontsize=axis_fontsize)
     plt.yticks(fontsize=axis_fontsize)
     fig.set_size_inches(18.5, 10.5)
