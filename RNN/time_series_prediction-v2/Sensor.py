@@ -29,6 +29,11 @@ class Sensor:
          'TANK_FILTER_IN_PRESSURE':'PSI','TANK_FILTER_OUT_PRESSURE':'PSI',
          'TANK_LEVEL':'Inch','TANK_TEMPERATURE':'Fahrenheit','FT-202B':'Mils',
          'FT-204B':'Mils','PT-203':'Mils','PT-204':'Mils'}
+    sensor_acronym = {
+        'MAIN_FILTER_IN_PRESSURE': 'P1', 'MAIN_FILTER_OIL_TEMP': 'T1', 'MAIN_FILTER_OUT_PRESSURE': 'P2',
+        'OIL_RETURN_TEMPERATURE': 'T2', 'TANK_FILTER_IN_PRESSURE': 'P3', 'TANK_FILTER_OUT_PRESSURE': 'P4',
+        'TANK_LEVEL': 'L1', 'TANK_TEMPERATURE': 'T3', 'FT-202B': 'V1', 'FT-204B': 'V2', 'PT-203': 'V3', 'PT-204': 'V4'
+    }
 
     def __init__(self, dataset_path, sensor_name,operating_range, sample_rate, root_path, n_epochs = 1, n_batch = 1,
                  save_info = 0, n_neurons = 1, run_on_local = 1, train = 1, n_lag = 1, n_seq = 1):
@@ -240,15 +245,17 @@ class Sensor:
         Y = np.array(forecasts)
         for i in range(0, Y.shape[1]):
             index = X[i]
-            pyplot.plot(time[index[0]:index[len(index) - 1] + 1], Y[:, i], label='Prediction: t+' + str(i + 1), linewidth=linewidth)
+            # pyplot.plot(time[index[0]:index[len(index) - 1] + 1], Y[:, i], label='Prediction: t+' + str(i + 1), linewidth=linewidth)
+            pyplot.plot(time[index[0]:index[len(index) - 1] + 1], Y[:, i], label='Prediction', linewidth=linewidth)
+
             if plot_one_line == 1:
                 break
         # plot the operating range
-        pyplot.axhline(y=self.operating_range[0], color='g', linestyle='-', linewidth=linewidth, label='normal')
-        pyplot.axhline(y=self.operating_range[1], color='orange', linestyle='-', linewidth=linewidth, label='low')
-        pyplot.axhline(y=self.operating_range[2], color='r', linestyle='-', linewidth=linewidth, label='high')
+        pyplot.axhline(y=self.operating_range[0], color='g', linestyle='-', linewidth=linewidth, label='Normal')
+        pyplot.axhline(y=self.operating_range[1], color='orange', linestyle='-', linewidth=linewidth, label='Low')
+        pyplot.axhline(y=self.operating_range[2], color='r', linestyle='-', linewidth=linewidth, label='High')
 
-        pyplot.title(file_name, fontsize=label_fontsize)
+        pyplot.title(self.sensor_acronym[sensor_name], fontsize=label_fontsize)
         pyplot.legend(fontsize=label_fontsize)
         pyplot.xlabel('Time', fontsize=label_fontsize)
         pyplot.ylabel(self.units[sensor_name], fontsize=label_fontsize)
@@ -274,7 +281,7 @@ class Sensor:
         pyplot.axhline(y=self.operating_range[1], color='orange', linestyle='-', linewidth=linewidth, label='low')
         pyplot.axhline(y=self.operating_range[2], color='r', linestyle='-', linewidth=linewidth, label='high')
 
-        pyplot.title(file_name, fontsize=label_fontsize)
+        pyplot.title(self.sensor_acronym[sensor_name], fontsize=label_fontsize)
         pyplot.legend(fontsize=label_fontsize)
         pyplot.xlabel('Time', fontsize=label_fontsize)
         pyplot.ylabel(self.units[sensor_name], fontsize=label_fontsize)
@@ -327,6 +334,26 @@ class Sensor:
             self.pkl.close()
         except:
             print('close file error!')
+
+    def normality_test(self):
+        _, series_values, _ = self.load_dataset()
+        results = stats.shapiro(series_values)
+        if results[1] > 0.05:
+            self.normality = 1
+        else:
+            self.normality = 0
+        # write results to a file
+        # with open(os.path.join(self.root_path, 'normality.txt'), 'a') as f:
+        #     f.write('sensor name: ' + str(self.sensor_name + '-' + self.sample_rate) + ' ,normality: ' + str(self.normality) + '\n')
+        # save histogram image
+        fig = pyplot.figure()
+        pyplot.hist(series_values)
+        pyplot.title('Distribution of ' + self.sensor_acronym[self.sensor_name], fontsize=16)
+        pyplot.xlabel('Value', fontsize=16)
+        pyplot.ylabel('Frequency', fontsize=16)
+        if self.save_info:
+            fig.savefig(os.path.join(self.root_path, 'distribution_test', self.file_name + '.png'), bbox_inches='tight', dpi=150)
+
 
     def run_train(self):
         # create logs files
@@ -392,7 +419,7 @@ class Sensor:
         # plot forecasts
         self.plot_forecasts(series_values, forecasts, n_test, self.file_name, self.sensor_name, raw_datetime, self.n_seq)
 
-    def get_health_score(self):
+    def get_pred_health_score(self):
         print('loading model ' + self.file_name + '.h5...')
         model = load_model(
             os.path.join(self.file_path, 'model_' + self.file_name + '-' + 'seq_' + str(self.n_seq) + '.h5'))
@@ -419,19 +446,33 @@ class Sensor:
             # mu = normal
             # sigma = three_sigma / 3
             # cdf = stats.norm.cdf(np.log(np.array(forecasts) + 10), loc=mu, scale=sigma)
-            # health_index = 1 - abs(cdf - 0.5) * 2
+            # health_index_pred = 1 - abs(cdf - 0.5) * 2
             # time = raw_datetime[-n_test:]
 
             # use rayleigh distribution
             # if the prediction value is less than the mean of the rayleigh distribution, set health index as 1
             # otherwise the far from the mean, the less the health index is
-            health_index = np.zeros((len(forecasts),1))
-            mean, var, skew, kurt = rayleigh.stats(moments='mvsk')
-            index = forecasts <= mean
+            ####################
+            # health_index_pred = np.zeros((len(forecasts),1))
+            # mean, var, skew, kurt = rayleigh.stats(moments='mvsk')
+            # index = forecasts <= mean
+            # health_index_pred[index] = 1
+            # index = forecasts > mean
+            # cdf = rayleigh.cdf(forecasts)
+            # health_index_pred[index] = (1 - cdf[index])*2
+            # time = raw_datetime[-n_test:]
+            #####################
+            forecasts = np.asarray(forecasts)
+            health_index = np.zeros((len(forecasts), 1))
+            normal, low, high = self.operating_range
+            three_sigma = abs(normal-high)
+            mu = normal
+            sigma = three_sigma/3
+            index = forecasts <= normal
             health_index[index] = 1
-            index = forecasts > mean
-            cdf = rayleigh.cdf(forecasts)
-            health_index[index] = (1 - cdf[index])*2
+            index = forecasts > normal
+            cdf = stats.norm.cdf(forecasts[index], loc=mu, scale=sigma)
+            health_index[index] = 1 - abs(cdf - 0.5) * 2
             time = raw_datetime[-n_test:]
         else:
             normal, low, high = self.operating_range
@@ -445,7 +486,7 @@ class Sensor:
             # save health index to file
             print('save health index to csv starts...')
             df = pd.DataFrame({'time':time, 'prediction_value':np.squeeze(forecasts), 'health_index':np.squeeze(health_index)}, columns=['time','prediction_value','health_index'])
-            df.to_csv(os.path.join(os.curdir,'health_index',self.sensor_name+'.csv'), sep=',', encoding='utf-8',index = False)
+            df.to_csv(os.path.join(os.curdir,'health_index_pred',self.sensor_name+'.csv'), sep=',', encoding='utf-8',index = False)
             print('save health index to csv done...')
 
     def get_all_health_score(self):
@@ -456,13 +497,24 @@ class Sensor:
         # load dataset
         series, series_values, raw_datetime = self.load_dataset()
         if self.sensor_name in ['FT-202B', 'PT-203', 'FT-204B', 'PT-204']:
+            # health_index_pred = np.zeros(len(series_values))
+            # mean, var, skew, kurt = rayleigh.stats(moments='mvsk')
+            # index = series_values <= mean
+            # health_index_pred[index] = 1
+            # index = series_values > mean
+            # cdf = rayleigh.cdf(series_values)
+            # health_index_pred[index] = (1 - cdf[index]) * 2
+            # time = raw_datetime
             health_index = np.zeros(len(series_values))
-            mean, var, skew, kurt = rayleigh.stats(moments='mvsk')
-            index = series_values <= mean
+            normal, low, high = self.operating_range
+            three_sigma = abs(normal - high)
+            mu = normal
+            sigma = three_sigma / 3
+            index = series_values <= normal
             health_index[index] = 1
-            index = series_values > mean
-            cdf = rayleigh.cdf(series_values)
-            health_index[index] = (1 - cdf[index]) * 2
+            index = series_values > normal
+            cdf = stats.norm.cdf(series_values[index], loc=mu, scale=sigma)
+            health_index[index] = 1 - abs(cdf - 0.5) * 2
             time = raw_datetime
         else:
             normal, low, high = self.operating_range

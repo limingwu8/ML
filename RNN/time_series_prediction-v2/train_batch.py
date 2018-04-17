@@ -28,6 +28,7 @@ sensor_names = {
     'TANK_FILTER_IN_PRESSURE','TANK_FILTER_OUT_PRESSURE','TANK_LEVEL','TANK_TEMPERATURE','FT-202B',
     'FT-204B','PT-203','PT-204'
 }
+
 # operating range for each sensor, (normal, low, high)
 operating_ranges = {
     'MAIN_FILTER_IN_PRESSURE':(65,40,90),'MAIN_FILTER_OIL_TEMP':(110,90,130),'MAIN_FILTER_OUT_PRESSURE':(63,40,90),
@@ -52,6 +53,7 @@ for name in sensor_names:
             if train == 1:
                 s.run_train()   # train the network
             else:
-                # s.get_health_score()  # load .h5 file and make prediction
+                # s.get_pred_health_score()  # load .h5 file and make prediction
                 # s.get_all_health_score()
-                s.load_model_and_predict()
+                # s.load_model_and_predict()
+                s.normality_test()

@@ -10,7 +10,7 @@ import numpy as np
 
 
 save_info = 1
-# root_path = 'Y:\\USS-RF-Fan-Data-Analytics\\_13_Preliminary-results\\LSTM-preciction\\multi-step-prediction\\compare\\health_index\\'
+# root_path = 'Y:\\USS-RF-Fan-Data-Analytics\\_13_Preliminary-results\\LSTM-preciction\\multi-step-prediction\\compare\\health_index_pred\\'
 root_path = '/home/liming/Documents/USS-RF-Fan-Data-Analytics/_13_Preliminary-results/LSTM-preciction/multi-step-prediction/compare/health_index/'
 sensor_names = {
     'MAIN_FILTER_IN_PRESSURE','MAIN_FILTER_OIL_TEMP','MAIN_FILTER_OUT_PRESSURE','OIL_RETURN_TEMPERATURE',
@@ -35,6 +35,11 @@ line_colors = {
     'TANK_LEVEL':'k','TANK_TEMPERATURE':'brown','FT-202B':'pink','FT-204B':'gray',
     'PT-203':'orange','PT-204':'purple'
 }
+sensor_acronym = {
+    'MAIN_FILTER_IN_PRESSURE': 'P1', 'MAIN_FILTER_OIL_TEMP': 'T1', 'MAIN_FILTER_OUT_PRESSURE': 'P2',
+    'OIL_RETURN_TEMPERATURE': 'T2', 'TANK_FILTER_IN_PRESSURE': 'P3', 'TANK_FILTER_OUT_PRESSURE': 'P4',
+    'TANK_LEVEL': 'L1', 'TANK_TEMPERATURE': 'T3', 'FT-202B': 'V1', 'FT-204B': 'V2', 'PT-203': 'V3', 'PT-204': 'V4'
+}
 
 def load_dataset(paths):
     series = {}
@@ -53,17 +58,20 @@ def get_paths():
     files = os.listdir(root_health_index_all)
     paths_health_index_all = [os.path.join(root_health_index_all, s) for s in files]
 
-    root_health_index_pred = os.path.join(os.curdir,'health_index')
+    root_health_index_pred = os.path.join(os.curdir,'health_index_pred')
     files = os.listdir(root_health_index_pred)
     paths_health_index_pred = [os.path.join(root_health_index_pred, s) for s in files]
 
     return paths_health_index_all, paths_health_index_pred
 
-def plot_health_index_combined(series, overall_health_index):
+def plot_health_index_combined(series, overall_health_index, path):
+    """
+    Combine all health index in one figure
+    """
     label_fontsize = 35
     legend_fontsize = 18
     axis_fontsize = 30
-    linewidth = 5
+    linewidth = 3
 
     fig = plt.figure()
     axis = fig.add_subplot(1,1,1)
@@ -72,22 +80,26 @@ def plot_health_index_combined(series, overall_health_index):
     for key in series.keys():
         # if key in ['MAIN_FILTER_OUT_PRESSURE','TANK_FILTER_IN_PRESSURE','TANK_FILTER_OUT_PRESSURE']:
         #     continue
-        plt.plot(series[key].time,series[key].health_index, label=key+',weight: '+str(weights[key]), linewidth=linewidth,alpha=0.3, color=line_colors[key])
-    plt.plot(overall_health_index, label = 'overall_health_index', linewidth=linewidth, color = 'black')
+        plt.plot(series[key].time,series[key].health_index, label=sensor_acronym[key], linewidth=linewidth,alpha=0.3, color=line_colors[key])
+    plt.plot(overall_health_index, label = 'overall', linewidth=linewidth+3, color = 'black')
     plt.xlabel('Days', fontsize=label_fontsize)
     plt.ylabel('Values', fontsize=label_fontsize)
     plt.title('Health Index', fontsize=label_fontsize)
     plt.xticks(fontsize=axis_fontsize)
     plt.yticks(fontsize=axis_fontsize)
-    plt.legend(fontsize=legend_fontsize,bbox_to_anchor=(1.6,0.5), loc="center right")
+    plt.legend(fontsize=legend_fontsize,bbox_to_anchor=(1.13,0.5), loc="center right")
     # plt.show()
     fig.set_size_inches(18.5, 10.5)
     fig.tight_layout()
-    fig.subplots_adjust(right=0.65)
-    fig.savefig(os.path.join(root_path,'health_index_all', 'health_index_combined_all.png'), bbox_inches='tight', dpi=150)
+    fig.subplots_adjust(right=0.88)
+    if save_info:
+        fig.savefig(os.path.join(path, 'health_index_combined.png'), bbox_inches='tight', dpi=150)
     plt.close(fig)
 
-def plot_health_index_separated(series, overall_health_index):
+def plot_health_index_separated(series, path):
+    """
+    For each health index, generate a figure
+    """
     label_fontsize = 35
     legend_fontsize = 20
     axis_fontsize = 30
@@ -98,35 +110,37 @@ def plot_health_index_separated(series, overall_health_index):
         axis = fig.add_subplot(1, 1, 1)
         axis.xaxis_date()
         axis.xaxis.set_major_formatter(DateFormatter('%m-%d'))
-        plt.plot(series[key].time,series[key].health_index, label=key+', weight: '+str(weights[key]), linewidth=linewidth)
+        plt.plot(series[key].time,series[key].health_index, label=sensor_acronym[key], linewidth=linewidth)
         # plt.plot(overall_health_index, label='overall_health_index', linewidth=linewidth)
         plt.xlabel('Days', fontsize=label_fontsize)
         plt.ylabel('Health Index', fontsize=label_fontsize)
-        plt.title('Health Index: ' + key, fontsize=label_fontsize)
+        axis.set_ylim([0,1])
+        plt.title('Health Index: ' + sensor_acronym[key], fontsize=label_fontsize)
         plt.xticks(fontsize=axis_fontsize)
         plt.yticks(fontsize=axis_fontsize)
         plt.legend(fontsize=legend_fontsize)
         # plt.show()
-        fig.set_size_inches(18.5, 10.5)
-        fig.savefig(os.path.join(root_path,'health_index_all', 'health_index_' + key + '.png'), bbox_inches='tight', dpi=150)
+        if save_info:
+            fig.set_size_inches(18.5, 10.5)
+            fig.savefig(os.path.join(path, 'health_index_' + key + '.png'), bbox_inches='tight', dpi=150)
         plt.close(fig)
     # plot overall health index
-    fig = plt.figure()
-    axis = fig.add_subplot(1, 1, 1)
-    axis.xaxis_date()
-    axis.xaxis.set_major_formatter(DateFormatter('%m-%d'))
-    plt.plot(overall_health_index, label='overall_health_index', linewidth=linewidth)
-    plt.xlabel('Days', fontsize=label_fontsize)
-    plt.ylabel('Health Index', fontsize=label_fontsize)
-    plt.title('Overall Health Index', fontsize=label_fontsize)
-    plt.xticks(fontsize=axis_fontsize)
-    plt.yticks(fontsize=axis_fontsize)
+    # fig = plt.figure()
+    # axis = fig.add_subplot(1, 1, 1)
+    # axis.xaxis_date()
+    # axis.xaxis.set_major_formatter(DateFormatter('%m-%d'))
+    # plt.plot(overall_health_index, label='overall_health_index', linewidth=linewidth)
+    # plt.xlabel('Days', fontsize=label_fontsize)
+    # plt.ylabel('Health Index', fontsize=label_fontsize)
+    # plt.title('Overall Health Index', fontsize=label_fontsize)
+    # plt.xticks(fontsize=axis_fontsize)
+    # plt.yticks(fontsize=axis_fontsize)
     # plt.show()
-    fig.set_size_inches(18.5, 10.5)
-    fig.savefig(os.path.join(root_path, 'health_index_overall.png'), bbox_inches='tight', dpi=150)
-    plt.close(fig)
+    # fig.set_size_inches(18.5, 10.5)
+    # fig.savefig(os.path.join(root_path, 'health_index_overall.png'), bbox_inches='tight', dpi=150)
+    # plt.close(fig)
 
-def plot_health_index_predicted_and_all(series_all,series_pred):
+def plot_health_index_overlay(series_all,series_pred, path):
     label_fontsize = 35
     legend_fontsize = 20
     axis_fontsize = 30
@@ -142,19 +156,23 @@ def plot_health_index_predicted_and_all(series_all,series_pred):
         # plt.plot(overall_health_index, label='overall_health_index', linewidth=linewidth)
         plt.xlabel('Days', fontsize=label_fontsize)
         plt.ylabel('Health Index', fontsize=label_fontsize)
+        axis.set_ylim([0,1])
         plt.title('Health Index: ' + key, fontsize=label_fontsize)
         plt.xticks(fontsize=axis_fontsize)
         plt.yticks(fontsize=axis_fontsize)
         plt.legend(fontsize=legend_fontsize)
         # plt.show()
-        fig.set_size_inches(18.5, 10.5)
-        fig.savefig(os.path.join(root_path,'health_index_all_and_pred', 'health_index_' + key + '.png'), bbox_inches='tight', dpi=150)
+        if save_info:
+            fig.set_size_inches(18.5, 10.5)
+            fig.savefig(os.path.join(path, 'health_index_' + key + '.png'), bbox_inches='tight', dpi=150)
         plt.close(fig)
 
 
 def get_combined_health_index(series):
-
-    # health_indices = [series[key].health_index.values for key in series.keys()]
+    """
+    plot all health index in one figure
+    """
+    # health_indices = [series[key].health_index_pred.values for key in series.keys()]
     #
     # for i in zip(health_indices[0], health_indices[1],health_indices[2],
     #              health_indices[3],health_indices[4],health_indices[5],
@@ -183,11 +201,20 @@ def get_combined_health_index(series):
     return overall_health_index
 
 if __name__ == '__main__':
+    plot = 'all'
     paths_health_index_all,paths_health_index_pred = get_paths()
     series_all = load_dataset(paths_health_index_all)
     series_pred = load_dataset(paths_health_index_pred)
-    plot_health_index_predicted_and_all(series_all,series_pred)
-    # overall_health_index = get_combined_health_index(series)
-    # plot_health_index_combined(series, overall_health_index)
-    # plot_health_index_separated(series, overall_health_index)
-
+    if plot == 'pred':
+        path = os.path.join(root_path,'health_index_pred')
+        overall_health_index = get_combined_health_index(series_pred)
+        plot_health_index_combined(series_pred, overall_health_index, path)
+        plot_health_index_separated(series_pred, path)
+    elif plot=='all':
+        path = os.path.join(root_path,'health_index_all')
+        overall_health_index = get_combined_health_index(series_all)
+        plot_health_index_combined(series_all, overall_health_index, path)
+        plot_health_index_separated(series_all, path)
+    elif plot == 'overlay':
+        path = os.path.join(root_path,'health_index_overlay')
+        plot_health_index_overlay(series_all,series_pred, path)
