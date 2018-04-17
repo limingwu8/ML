@@ -408,6 +408,6 @@ class Sensor:
         health_index = 1 - abs(cdf - 0.5) * 2
         #     # save health index to file
         print('save health index to csv starts...')
-        df = pd.DataFrame({'prediction_value':np.squeeze(prediction_value), 'health_index':np.squeeze(health_index)})
-        df.to_csv(os.path.join(self.file_path, 'health_index.csv'), sep=',', encoding='utf-8',index = False)
+        df = pd.DataFrame({'prediction_value':np.squeeze(prediction_value), 'health_index_pred':np.squeeze(health_index)})
+        df.to_csv(os.path.join(self.file_path, 'health_index_pred.csv'), sep=',', encoding='utf-8',index = False)
         print('save health index to csv done...')
