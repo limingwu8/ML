@@ -1,6 +1,7 @@
-import dicom
+import scipy.io
 import matplotlib.pylab as plt
 import os
+import numpy as np
 def get_files(file_dir):
     '''
     Args:
@@ -14,18 +15,17 @@ def get_files(file_dir):
             dataset_path.append(os.path.join(root,file))
     return dataset_path
 
-path = '/home/liming/Documents/dataset/siim-medical-image-analysis-tutorial/dicom_images/matlab/examples/sample_data/DICOM/digest_article'
+path = '/home/liming/Documents/dataset/data'
 files = get_files(path)
 for file in files:
     print(file)
 
 ds = []
 for i in range(len(files)):
-    temp = dicom.read_file(files[i])
+    temp = scipy.io.loadmat(files[i])
+    img = sol_yxzt
     ds.append(temp)
-    # plt.subplot(1,30,i+1)
-    # plt.axis('off')
-    plt.imshow(temp.pixel_array)
+    plt.imshow(temp)
 plt.show()
 
 #
