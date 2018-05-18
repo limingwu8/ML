@@ -1,3 +1,7 @@
+import os
+# os.environ['LD_LIBRARY_PATH'] = "/usr/local/cuda-9.0/lib64"
+# os.environ['PATH'] = '/home/liming/anaconda3/envs/tf/bin:/usr/local/cuda-9.0/bin:/home/liming/anaconda3/bin:/home/liming/bin:/home/liming/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'
+# os.environ.update()
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
 
